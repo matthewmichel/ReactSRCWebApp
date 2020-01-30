@@ -1,0 +1,36 @@
+.appMenuBar {
+    background-color: white;
+  }
+  
+.appMenuBar Button {
+    color: black;
+}
+
+#sideDrawer {
+    color: black;
+}
+
+.Toolbar-Style {
+    background-color: white;
+  }
+
+.App-logo {
+    height: 4vmin;
+    pointer-events: none;
+    padding-top: 5px;
+    padding-left: 1em;
+  }
+
+.sideMenu {
+  width: 15em;
+  background-color: white;
+}
+
+.MenuButton {
+  text-emphasis-color: black;
+  margin-right: 1em;
+}
+
+.SquareLogoStyle {
+  width: 40px;
+}
