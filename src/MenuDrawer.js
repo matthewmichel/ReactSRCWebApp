@@ -37,7 +37,7 @@ class MainMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        openLeft: false
+        openLeft: false,
     };
 }
 
@@ -54,8 +54,7 @@ class MainMenu extends React.Component {
   }
 
   ChangeAppScreen = (screenName) => {
-    this.props.appCurrentScreen(screenName);
-    console.log(screenName)
+    this.props.changeCurrentScreenState(screenName);
   }
 
   sideList = side => (

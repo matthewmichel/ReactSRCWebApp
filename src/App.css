@@ -16,6 +16,12 @@
   color: white;
 }
 
+.App-Body {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
 .App-link {
   color: #61dafb;
 }
