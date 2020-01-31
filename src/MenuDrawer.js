@@ -65,27 +65,25 @@ class MainMenu extends React.Component {
       role="presentation"
       onClick={this.toggleDrawer(false)}
       onKeyDown={this.toggleDrawer(false)}
+      style={{ backgroundColor: '#282c3', height: '100%', color: 'white' }}
     >
       <List>
         <this.ListItemLink onClick={() => this.ChangeAppScreen('Home')}>
           <ListItemText primary="Home"/>
         </this.ListItemLink>
+        <this.ListItemLink onClick={() => this.ChangeAppScreen('About')}>
+          <ListItemText primary="About" />
+        </this.ListItemLink>
         {this.props.isLoggedIn ? <this.ListItemLink onClick={() => this.ChangeAppScreen('MyAccount')}>
           <ListItemText primary="My Account" />
         </this.ListItemLink> : <div></div> }
-        <this.ListItemLink onClick={() => this.ChangeAppScreen('Contact')}>
-          <ListItemText primary="Contact" />
-        </this.ListItemLink>
         {!this.props.isLoggedIn ? <this.ListItemLink onClick={() => this.ChangeAppScreen('Login')}>
           <ListItemText primary="Log In" />
         </this.ListItemLink> : <this.ListItemLink onClick={() => this.ChangeAppScreen('Login')}>
           <ListItemText primary="Log Out" />
         </this.ListItemLink> }
-      </List>
-      <Divider />
-      <List>
-        <this.ListItemLink onClick={() => this.ChangeAppScreen('Creator')}>
-          <ListItemText primary="Creator" />
+        <this.ListItemLink onClick={() => this.ChangeAppScreen('Contact')}>
+          <ListItemText primary="Contact" />
         </this.ListItemLink>
       </List>
     </div>
@@ -97,9 +95,9 @@ class MainMenu extends React.Component {
         <Drawer open={this.state.openLeft} onClose={this.toggleDrawer(false)}>
           {this.sideList('left')}
         </Drawer>
-        <AppBar position="fixed" className="Toolbar-Style">
+        <AppBar position="fixed" className="ToolbarStyle" style={{ backgroundColor: '#AD0000' }}>
           <Toolbar>
-            <IconButton edge="start" className={classes.menuButton} color="black" onClick={this.toggleDrawer(true)}>
+            <IconButton edge="start" className={classes.menuButton} style={{color: "white"}} onClick={this.toggleDrawer(true)}>
               <MenuIcon />
             </IconButton>
             {/* <IconButton edge="end" onClick={console.log('home clicked.')}>

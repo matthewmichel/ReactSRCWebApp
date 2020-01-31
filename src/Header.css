@@ -10,12 +10,11 @@
     color: black;
 }
 
-.Toolbar-Style {
+.ToolbarStyle {
     background-color: white;
   }
 
 .App-logo {
-    height: 4vmin;
     pointer-events: none;
     padding-top: 5px;
     padding-left: 1em;
@@ -23,7 +22,7 @@
 
 .sideMenu {
   width: 15em;
-  background-color: white;
+  background-color: #282c34;
 }
 
 .MenuButton {
