@@ -73,8 +73,8 @@ class MainMenu extends React.Component {
         <this.ListItemLink onClick={() => this.ChangeAppScreen('About')}>
           <ListItemText primary="About" />
         </this.ListItemLink>
-        {this.props.isLoggedIn ? <this.ListItemLink onClick={() => this.ChangeAppScreen('MyAccount')}>
-          <ListItemText primary="My Account" />
+        {this.props.isLoggedIn ? <this.ListItemLink onClick={() => this.ChangeAppScreen('Dashboard')}>
+          <ListItemText primary="Dashboard" />
         </this.ListItemLink> : <div></div> }
         {!this.props.isLoggedIn ? <this.ListItemLink onClick={() => this.ChangeAppScreen('Login')}>
           <ListItemText primary="Log In" />

@@ -6,6 +6,7 @@ import { TextField, Paper, Grid, Button } from '@material-ui/core'
 // IMPORT CUSTOM REACT COMPONENTS
 import MenuDrawer from './MenuDrawer';
 import { fontFamily } from '@material-ui/system';
+import MemberDashboard from './MemberDashboard';
 
 // IMPORT MATERIAL UI ICONS
 import FacebookLogo from '@material-ui/icons/Facebook';
@@ -19,21 +20,47 @@ class App extends React.Component {
     super(props);
     this.state = {
       currentScreen: 'Home',
+      username: 'null',
+      userType: 'null',
+      isLoggedIn: false,
     };
 
     this.ChangeCurrentScreenState = this.ChangeCurrentScreenState.bind(this);
+  }
+
+  // FUNCTIONS
+
+  CheckUserCredentials() {
+    if (document.getElementById('usernameInput').value == 'customer' && document.getElementById('passwordInput').value == 'password') {
+      this.setState({ username: 'member', userType: 'member', currentScreen: 'Dashboard', isLoggedIn: true });
+    } else if (document.getElementById('usernameInput').value == 'employee' && document.getElementById('passwordInput').value == 'password') {
+      this.setState({ username: 'employee', userType: 'employee', currentScreen: 'Dashboard', isLoggedIn: true });
+    } else if (document.getElementById('usernameInput').value == 'manager' && document.getElementById('passwordInput').value == 'password') {
+      this.setState({ username: 'manager', userType: 'manager', currentScreen: 'Dashboard', isLoggedIn: true });
+    } else if (document.getElementById('usernameInput').value == 'student' && document.getElementById('passwordInput').value == 'password') {
+      this.setState({ username: 'member', userType: 'member', currentScreen: 'Dashboard', isLoggedIn: true }, () => {
+        console.log('student log in')
+        console.log(this.state.username)
+        console.log(this.state.currentScreen)
+      });
+    }
+  }
+
+  SetUsername = (username) => {
+    this.setState({ username: username });
   }
 
   // CALLBACK FUNCTIONS
 
   ChangeCurrentScreenState(screenName) {
     this.setState({ currentScreen: screenName });
+    console.log(this.state.currentScreen);
   }
 
   render() {
     return (
       <div className="App" >
-        <MenuDrawer changeCurrentScreenState={this.ChangeCurrentScreenState} />
+        <MenuDrawer changeCurrentScreenState={this.ChangeCurrentScreenState} isLoggedIn={this.state.isLoggedIn} />
         {this.state.currentScreen == 'Home' ?
           <header className="App-header">
             <h1 style={{ color: '#AD0000', fontFamily: 'NCAALouisvilleCardinals', fontSize: '7em', marginBottom: '1em' }}>U of L</h1>
@@ -67,9 +94,9 @@ The Department of Intramural and Recreational Sports serves to improve the quali
                     <Paper style={{ padding: '2em', borderStyle: 'solid', borderWidth: '1px', width: '300px', paddingBottom: '2em' }}>
                       <TextField id="usernameInput" placeholder="Username" />
                       <br /><br /><br />
-                      <TextField id="usernameInput" placeholder="Password" type="password" />
+                      <TextField id="passwordInput" placeholder="Password" type="password" />
                       <br /><br /><br />
-                      <Button onClick={() => console.log('login button clicked.')} style={{ backgroundColor: '#AD0000', color: 'white' }}>Log In</Button>
+                      <Button onClick={() => this.CheckUserCredentials()} style={{ backgroundColor: '#AD0000', color: 'white' }}>Log In</Button>
                       <br /><br /><br />
                       <a href="#" target="_blank">I forgot my password.</a>
                     </Paper>
@@ -81,12 +108,19 @@ The Department of Intramural and Recreational Sports serves to improve the quali
                   <header className="App-header">
                     <h1 style={{ color: '#AD0000', fontFamily: 'NCAALouisvilleCardinals', fontSize: '7em', marginBottom: '1em' }}>Contact</h1>
                     <p style={{ color: 'black' }}>Follow the SRC on Social Media</p>
-                    <a href="https://www.facebook.com/UofLIntramurals/" target="_blank"><FacebookLogo fontSize="large"/></a>
-                    <a href="https://twitter.com/ulsrc" target="_blank"><TwitterLogo fontSize="large"/></a>
-                    <a href="https://www.youtube.com/channel/UCTvunrnR1_xbD-oSRkEq1jw" target="_blank"><YouTubeLogo fontSize="large"/></a>
+                    <a href="https://www.facebook.com/UofLIntramurals/" target="_blank"><FacebookLogo fontSize="large" /></a>
+                    <a href="https://twitter.com/ulsrc" target="_blank"><TwitterLogo fontSize="large" /></a>
+                    <a href="https://www.youtube.com/channel/UCTvunrnR1_xbD-oSRkEq1jw" target="_blank"><YouTubeLogo fontSize="large" /></a>
                   </header>
                 </div>
-                : <div></div>
+                : this.state.currentScreen == 'Dashboard' ?
+                  <div>
+                    {this.state.userType == 'member' ? <MemberDashboard username={this.state.username}/>
+                      : this.state.userType == 'employee' ? <MemberDashboard username={this.state.username}/>
+                        : this.state.userType == 'manager' ? <MemberDashboard username={this.state.username}/>
+                          : <div></div>}
+                  </div>
+                  : <div></div>
         }
       </div>
     )
