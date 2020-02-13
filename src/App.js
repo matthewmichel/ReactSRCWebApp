@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { TextField, Paper, Grid, Button } from '@material-ui/core'
+import { TextField, Paper, Grid, Button, Snackbar } from '@material-ui/core'
 
 // IMPORT CUSTOM REACT COMPONENTS
 import MenuDrawer from './MenuDrawer';
@@ -12,6 +12,7 @@ import MemberDashboard from './MemberDashboard';
 import FacebookLogo from '@material-ui/icons/Facebook';
 import TwitterLogo from '@material-ui/icons/Twitter';
 import YouTubeLogo from '@material-ui/icons/YouTube';
+import EmployeeDashboard from './EmployeeDashboard';
 
 
 class App extends React.Component {
@@ -61,6 +62,7 @@ class App extends React.Component {
     return (
       <div className="App" >
         <MenuDrawer changeCurrentScreenState={this.ChangeCurrentScreenState} isLoggedIn={this.state.isLoggedIn} />
+
         {this.state.currentScreen == 'Home' ?
           <header className="App-header">
             <h1 style={{ color: '#AD0000', fontFamily: 'NCAALouisvilleCardinals', fontSize: '7em', marginBottom: '1em' }}>U of L</h1>
@@ -116,8 +118,8 @@ The Department of Intramural and Recreational Sports serves to improve the quali
                 : this.state.currentScreen == 'Dashboard' ?
                   <div>
                     {this.state.userType == 'member' ? <MemberDashboard username={this.state.username}/>
-                      : this.state.userType == 'employee' ? <MemberDashboard username={this.state.username}/>
-                        : this.state.userType == 'manager' ? <MemberDashboard username={this.state.username}/>
+                      : this.state.userType == 'employee' ? <EmployeeDashboard username={this.state.username} isManager={false}/>
+                        : this.state.userType == 'manager' ? <EmployeeDashboard username={this.state.username} isManager={true}/>
                           : <div></div>}
                   </div>
                   : <div></div>

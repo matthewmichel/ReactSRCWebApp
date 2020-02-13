@@ -31,7 +31,7 @@ function a11yProps(index) {
   };
 }
 
-class MemberDashboard extends React.Component {
+class EmployeeDashboard extends React.Component {
 
   constructor(props) {
     super(props);
@@ -57,12 +57,21 @@ class MemberDashboard extends React.Component {
         <h1 style={{ color: 'black', paddingTop: '100px' }}>Hello, {this.props.username}.</h1>
         <AppBar position="static" style={{ backgroundColor: 'black' }}>
           <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="member dashboard tabs">
-            <Tab label="Membership Information" {...a11yProps(0)} />
-            <Tab label="Membership Billing" {...a11yProps(1)} />
+            <Tab label="Membership Lookup" {...a11yProps(0)} />
+            <Tab label="Payment Entry" {...a11yProps(1)} />
+            <Tab label="Membership Invoice List" {...a11yProps(2)} />
+            <Tab label="Equipment Utilization" {...a11yProps(3)} />
+            {this.props.isManager ? <Tab label="Membership Entry" {...a11yProps(4)} /> : <Tab label="Membership Entry" {...a11yProps(0)} disabled />}
           </Tabs>
         </AppBar>
         <TabPanel value={this.state.tabIndex} index={0}>
-          Here you can view your membership information. <br />
+          Item Two
+        </TabPanel>
+        <TabPanel value={this.state.tabIndex} index={1}>
+          Item Three
+        </TabPanel>
+        <TabPanel value={this.state.tabIndex} index={4}>
+          Add New Membership Information Here <br />
           <Paper>
             <Grid container direction="column">
               <Grid item style={{ padding: '10px' }}>
@@ -80,15 +89,9 @@ class MemberDashboard extends React.Component {
             </Grid>
           </Paper>
         </TabPanel>
-        <TabPanel value={this.state.tabIndex} index={1}>
-          Item Two
-        </TabPanel>
-        <TabPanel value={this.state.tabIndex} index={2}>
-          Item Three
-        </TabPanel>
       </div>
     )
   }
 }
 
-export default MemberDashboard;
+export default EmployeeDashboard;
