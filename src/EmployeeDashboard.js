@@ -74,17 +74,42 @@ class EmployeeDashboard extends React.Component {
           Add New Membership Information Here <br />
           <Paper>
             <Grid container direction="column">
-              <Grid item style={{ padding: '10px' }}>
-                Name
+            <Grid item style={{ padding: '10px' }}>
+                    <TextField label = 'First Name' style={{ padding: '10px' }}></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-                Member ID
+              <TextField label = 'Last Name' style={{ padding: '10px' }}></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-                Mailing Address
+                <TextField label = 'Member ID' style={{ padding: '10px' }}></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-                City
+                <TextField label = 'Mailing Address' style={{ padding: '10px' }}></TextField>
+              </Grid>
+              <Grid item style={{ padding: '10px' }}>
+                <TextField label = 'City' style={{ padding: '10px' }}></TextField>
+              </Grid>
+              <Grid item style={{ padding: '10px' }}>
+                <TextField label = 'State' style={{ padding: '10px' }}></TextField>
+              </Grid>
+              <Grid item style={{ padding: '10px' }}>
+                <TextField label = 'Zip Code' style={{ padding: '10px' }}></TextField>
+              </Grid>
+              <Grid item style={{ padding: '10px' }}>
+                <TextField label = 'Phone' style={{ padding: '10px' }}></TextField>
+              </Grid>
+              <Grid item style={{ padding: '10px' }}>
+                <TextField label = 'Email' style={{ padding: '10px' }}></TextField>
+              </Grid>
+              <Grid item style={{ padding: '10px' }}>
+                <TextField label = 'Department' style={{ padding: '10px' }}></TextField>
+              </Grid>
+              
+              <Grid item style={{ padding: '10px' }}>
+                <TextField label = 'Date' type = 'date' style={{ padding: '10px' }}></TextField>
+              </Grid>
+              <Grid item style={{ padding: '10px' }}>
+              <Button  style={{ backgroundColor: '#AD0000', color: 'white' }}>Submit</Button>
               </Grid>
             </Grid>
           </Paper>
