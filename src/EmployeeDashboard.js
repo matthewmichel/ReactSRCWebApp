@@ -57,20 +57,14 @@ class EmployeeDashboard extends React.Component {
         <h1 style={{ color: 'black', paddingTop: '100px' }}>Hello, {this.props.username}.</h1>
         <AppBar position="static" style={{ backgroundColor: 'black' }}>
           <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="member dashboard tabs">
-            <Tab label="Membership Lookup" {...a11yProps(0)} />
-            <Tab label="Payment Entry" {...a11yProps(1)} />
-            <Tab label="Membership Invoice List" {...a11yProps(2)} />
-            <Tab label="Equipment Utilization" {...a11yProps(3)} />
-            {this.props.isManager ? <Tab label="Membership Entry" {...a11yProps(4)} /> : <Tab label="Membership Entry" {...a11yProps(0)} disabled />}
+            <Tab label="Membership Entry" {...a11yProps(0)} />
+            <Tab label="Membership Lookup" {...a11yProps(1)} />
+            <Tab label="Payment Entry" {...a11yProps(2)} />
+            <Tab label="Membership Invoice List" {...a11yProps(3)} />
+            <Tab label="Equipment Utilization" {...a11yProps(4)} />
           </Tabs>
         </AppBar>
         <TabPanel value={this.state.tabIndex} index={0}>
-          Item Two
-        </TabPanel>
-        <TabPanel value={this.state.tabIndex} index={1}>
-          Item Three
-        </TabPanel>
-        <TabPanel value={this.state.tabIndex} index={4}>
           Add New Membership Information Here <br />
           <Paper>
             <Grid container direction="column">
@@ -104,7 +98,6 @@ class EmployeeDashboard extends React.Component {
               <Grid item style={{ padding: '10px' }}>
                 <TextField label = 'Department' style={{ padding: '10px' }}></TextField>
               </Grid>
-              
               <Grid item style={{ padding: '10px' }}>
                 <TextField label = 'Date' type = 'date' style={{ padding: '10px' }}></TextField>
               </Grid>
@@ -113,6 +106,23 @@ class EmployeeDashboard extends React.Component {
               </Grid>
             </Grid>
           </Paper>
+        </TabPanel>
+        <TabPanel value={this.state.tabIndex} index={1}>
+          Look up current members based on various information.
+        </TabPanel>
+        <TabPanel value={this.state.tabIndex} index={2}>
+          Enter membership payment records here.
+        </TabPanel>
+        <TabPanel value={this.state.tabIndex} index={3}>
+          Enter membership invoice lists here.
+        </TabPanel>
+        <TabPanel value={this.state.tabIndex} index={4}>
+          Enter equipment utilization counts here.
+          <Grid>Male</Grid>
+          <Grid>Female</Grid>
+          <Grid>Caucasian</Grid>
+          <Grid>African American</Grid>
+          <Grid>Other</Grid>
         </TabPanel>
       </div>
     )
