@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { TextField, Paper, Grid, Button, AppBar, Tabs, Tab, Typography, Box } from '@material-ui/core'
+import axios from 'axios';
 
 // IMPORT CUSTOM REACT COMPONENTS
 
@@ -46,6 +47,12 @@ class EmployeeDashboard extends React.Component {
     this.setState({ tabIndex: newValue });
   };
 
+  submitUserInformation = () => {
+    axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/inserts/insertmember?value1=A&value2='+ document.getElementById('firstNameTxt') +'&value3='+ document.getElementById('lastNameTxt') +'&value4='+ document.getElementById('streetNumberTxt') +'&value5='+ document.getElementById('streetNameTxt') +'&value6='+ document.getElementById('cityTxt') +'&value7='+ document.getElementById('stateTxt') +'&value8='+ document.getElementById('zipCodeTxt') +'&value9='+ document.getElementById('phoneTxt') +'&value10='+ document.getElementById('emailTxt') +'&value11='+ document.getElementById('emergencyContactNameTxt') +'&value12='+ document.getElementById('emergencyContactPhoneTxt') +'&value13='+ document.getElementById('dateOfBirthTxt') +'&value14='+ document.getElementById('dateOfRegistrationTxt') +'&value15=A')
+      .then((res) => console.log('submitting new user information successful: ' + res.data.value))
+      .catch((err) => console.log(err))
+  }
+
   // CALLBACK FUNCTIONS
 
   // RENDER COMPONENT
@@ -68,41 +75,47 @@ class EmployeeDashboard extends React.Component {
           Add New Membership Information Here <br />
           <Paper>
             <Grid container direction="column">
-            <Grid item style={{ padding: '10px' }}>
-                    <TextField label = 'First Name' style={{ padding: '10px' }}></TextField>
+              <Grid item style={{ padding: '10px' }}>
+                <TextField label='First Name' style={{ padding: '10px' }} id="firstNameTxt"></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-              <TextField label = 'Last Name' style={{ padding: '10px' }}></TextField>
+                <TextField label='Last Name' style={{ padding: '10px' }} id="lastNameTxt"></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'Member ID' style={{ padding: '10px' }}></TextField>
+                <TextField label='Street Number' style={{ padding: '10px' }} id="streetNumberTxt"></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'Mailing Address' style={{ padding: '10px' }}></TextField>
+                <TextField label='Street Name' style={{ padding: '10px' }} id="streetNameTxt"></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'City' style={{ padding: '10px' }}></TextField>
+                <TextField label='City' style={{ padding: '10px' }} id="cityTxt"></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'State' style={{ padding: '10px' }}></TextField>
+                <TextField label='State' style={{ padding: '10px' }} id="stateTxt"></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'Zip Code' style={{ padding: '10px' }}></TextField>
+                <TextField label='Zip Code' style={{ padding: '10px' }} id="zipCodeTxt"></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'Phone' style={{ padding: '10px' }}></TextField>
+                <TextField label='Phone' style={{ padding: '10px' }} id="phoneTxt"></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'Email' style={{ padding: '10px' }}></TextField>
+                <TextField label='Email' style={{ padding: '10px' }} id="emailTxt"></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'Department' style={{ padding: '10px' }}></TextField>
+                <TextField label='Date of Birth' type='date' style={{ padding: '10px' }} id="dateOfBirthTxt"></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'Date' type = 'date' style={{ padding: '10px' }}></TextField>
+                <TextField label='Emergency Contact Name' style={{ padding: '10px' }} id="emergencyContactNameTxt"></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-              <Button  style={{ backgroundColor: '#AD0000', color: 'white' }}>Submit</Button>
+                <TextField label='Emergency Contact Phone Number' style={{ padding: '10px' }} id="emergencyContactPhoneTxt"></TextField>
+              </Grid>
+              <Grid item style={{ padding: '10px' }}>
+                <TextField label='Date of Registration' type='date' style={{ padding: '10px' }} id="dateOfRegistrationTxt"></TextField>
+              </Grid>
+              <Grid item style={{ padding: '10px' }}>
+                <Button onClick={() => { this.submitUserInformation() }} style={{ backgroundColor: '#AD0000', color: 'white' }}>Submit</Button>
               </Grid>
             </Grid>
           </Paper>
