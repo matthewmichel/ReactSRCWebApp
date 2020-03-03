@@ -48,8 +48,8 @@ class EmployeeDashboard extends React.Component {
   };
 
   submitUserInformation = () => {
-    axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/inserts/insertmember?value1=A&value2='+ document.getElementById('firstNameTxt') +'&value3='+ document.getElementById('lastNameTxt') +'&value4='+ document.getElementById('streetNumberTxt') +'&value5='+ document.getElementById('streetNameTxt') +'&value6='+ document.getElementById('cityTxt') +'&value7='+ document.getElementById('stateTxt') +'&value8='+ document.getElementById('zipCodeTxt') +'&value9='+ document.getElementById('phoneTxt') +'&value10='+ document.getElementById('emailTxt') +'&value11='+ document.getElementById('emergencyContactNameTxt') +'&value12='+ document.getElementById('emergencyContactPhoneTxt') +'&value13='+ document.getElementById('dateOfBirthTxt') +'&value14='+ document.getElementById('dateOfRegistrationTxt') +'&value15=A')
-      .then((res) => console.log('submitting new user information successful: ' + res.data.value))
+    axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/inserts/insertmember?value1=A&value2='+ document.getElementById('firstNameTxt').value +'&value3='+ document.getElementById('lastNameTxt').value +'&value4='+ document.getElementById('streetNumberTxt').value +'&value5='+ document.getElementById('streetNameTxt').value +'&value6='+ document.getElementById('cityTxt').value +'&value7='+ document.getElementById('stateTxt').value +'&value8='+ document.getElementById('zipCodeTxt').value +'&value9='+ document.getElementById('phoneTxt').value +'&value10='+ document.getElementById('emailTxt').value +'&value11='+ document.getElementById('emergencyContactNameTxt').value +'&value12='+ document.getElementById('emergencyContactPhoneTxt').value +'&value13='+ document.getElementById('dateOfBirthTxt').value +'&value14='+ document.getElementById('dateOfRegistrationTxt').value +'&value15=A')
+      .then((res) => console.log('submitting new user information successful: ' + JSON.stringify(res)))
       .catch((err) => console.log(err))
   }
 
