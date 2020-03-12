@@ -4,6 +4,9 @@ import { TextField, Paper, Grid, Button, AppBar, Tabs, Tab, Typography, Box } fr
 import axios from 'axios';
 
 // IMPORT CUSTOM REACT COMPONENTS
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 
 
 // IMPORT MATERIAL UI ICONS
@@ -69,6 +72,8 @@ class EmployeeDashboard extends React.Component {
             <Tab label="Payment Entry" {...a11yProps(2)} />
             <Tab label="Membership Invoice List" {...a11yProps(3)} />
             <Tab label="Equipment Utilization" {...a11yProps(4)} />
+            <Tab label="Locker Entry" {...a11yProps(5)} />
+            <Tab label="Locker Lookup" {...a11yProps(6)} />
           </Tabs>
         </AppBar>
         <TabPanel value={this.state.tabIndex} index={0}>
@@ -122,20 +127,108 @@ class EmployeeDashboard extends React.Component {
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={1}>
           Look up current members based on various information.
+          <Grid item style={{ padding: '10px' }}>
+                <TextField label='Member ID' style={{ padding: '10px' }} ></TextField>
+              </Grid>
+          <Grid item style={{ padding: '10px' }}>
+                <TextField label='First Name' style={{ padding: '10px' }} ></TextField>
+              </Grid>
+          <Grid item style={{ padding: '10px' }}>
+                <TextField label='Last Name' style={{ padding: '10px' }} ></TextField>
+              </Grid>
+          <Grid item style={{ padding: '10px' }}>
+               <TextField label='Email' style={{ padding: '10px' }} ></TextField>
+               </Grid>    
+          <Grid item style={{ padding: '10px' }}>
+                  <Button style={{ backgroundColor: '#AD0000', color: 'white' }}>Submit</Button>
+              </Grid>
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={2}>
           Enter membership payment records here.
+          <Grid item style={{ padding: '10px' }}>
+                <TextField label='Member ID' style={{ padding: '10px' }} ></TextField>
+              </Grid>
+          <Grid item style={{ padding: '10px' }}>
+                <TextField label='Transaction Amount' style={{ padding: '10px' }} ></TextField>
+              </Grid>
+              <Grid item style={{ padding: '10px' }}><InputLabel>Transaction Type</InputLabel>
+            <Select>
+              <MenuItem value={'memp'}>Membership</MenuItem>
+              <MenuItem value={'l'}>Locker</MenuItem>
+            </Select>
+          </Grid>
+          <Grid item style={{ padding: '10px' }}>
+                  <Button style={{ backgroundColor: '#AD0000', color: 'white' }}>Submit</Button>
+          </Grid>
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={3}>
           Enter membership invoice lists here.
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={4}>
           Enter equipment utilization counts here.
-          <Grid>Male</Grid>
-          <Grid>Female</Grid>
-          <Grid>Caucasian</Grid>
-          <Grid>African American</Grid>
-          <Grid>Other</Grid>
+          <Grid><InputLabel>Area</InputLabel>
+          <Select defaultValue={'Weight Room'}>
+            <MenuItem value={'Weight Room'}>Weight Room</MenuItem>
+            <MenuItem value={'Sports Club Room'}>Sports Club Room</MenuItem>
+            <MenuItem value={'Main Gym Floor'}>Main Gym Floor</MenuItem>
+            <MenuItem value={'MAC Court'}>MAC Court</MenuItem>
+            <MenuItem value={'Group Fitness 200'}>Group Fitness 200</MenuItem>
+            <MenuItem value={'Group Fitness 201'}>Group Fitness 201</MenuItem>
+            <MenuItem value={'Group Fitness 204'}>Group Fitness 204</MenuItem>
+            <MenuItem value={'Golf Simulator'}>Golf Simulator</MenuItem>
+            <MenuItem value={'Racquetball Courts'}>Racquetball Courts</MenuItem>
+            <MenuItem value={'Annex'}>Annex</MenuItem>
+            <MenuItem value={'Sky Gym'}>Sky Gym</MenuItem>
+            <MenuItem value={'Qdoba Gaming Area'}>Qdoba Gaming Area</MenuItem>
+            <MenuItem value={'The Hatfield'}>The Hatfield</MenuItem>
+            <MenuItem value={'Classroom 207'}>Classroom 207</MenuItem>
+            <MenuItem value={'Classroom 110'}>Classroom 110</MenuItem>
+          </Select></Grid>
+            <Grid item style={{ padding: '10px' }}>
+                  <TextField label='Male Count' style={{ padding: '10px' }}></TextField>
+            </Grid>
+            <Grid item style={{ padding: '10px' }}>
+                  <TextField label='Female' style={{ padding: '10px' }}></TextField>
+            </Grid>      
+            <Grid item style={{ padding: '10px' }}>
+                  <TextField label='Caucasian' style={{ padding: '10px' }}></TextField>
+            </Grid>
+            <Grid item style={{ padding: '10px' }}>
+                  <TextField label='African American' style={{ padding: '10px' }}></TextField>
+            </Grid>
+            <Grid item style={{ padding: '10px' }}>
+                  <TextField label='Other' style={{ padding: '10px' }}></TextField>
+            </Grid>
+            <Grid item style={{ padding: '10px' }}>
+                  <Button style={{ backgroundColor: '#AD0000', color: 'white' }}>Submit</Button>
+                </Grid>
+        </TabPanel>
+        <TabPanel value={this.state.tabIndex} index={5}>
+          Enter Locker information here.
+            <Grid item style={{ padding: '10px' }}>
+                  <TextField label='Member ID' style={{ padding: '10px' }}></TextField>
+            </Grid>
+            <Grid item style={{ padding: '10px' }}>
+                  <TextField label='Locker ID' style={{ padding: '10px' }}></TextField>
+            </Grid>
+            <Grid item style={{ padding: '10px' }}><InputLabel>Locker Area</InputLabel>
+            <Select>
+              <MenuItem value={'m'}>Male</MenuItem>
+              <MenuItem value={'f'}>Female</MenuItem>
+            </Select>
+            </Grid>
+            <Grid item style={{ padding: '10px' }}><InputLabel>Locker Size</InputLabel>
+            <Select>
+              <MenuItem value={'s'}>Small</MenuItem>
+              <MenuItem value={'l'}>Large</MenuItem>
+            </Select>
+            </Grid>
+            <Grid item style={{ padding: '10px' }}>
+                  <Button style={{ backgroundColor: '#AD0000', color: 'white' }}>Submit</Button>
+                </Grid>
+        </TabPanel>
+        <TabPanel value={this.state.tabIndex} index={6}>
+          Look up current locker information here.
         </TabPanel>
       </div>
     )

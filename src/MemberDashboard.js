@@ -60,8 +60,7 @@ class MemberDashboard extends React.Component {
         <AppBar position="static" style={{ backgroundColor: 'black' }}>
           <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="member dashboard tabs">
             <Tab label="Membership Information" {...a11yProps(0)} />
-            <Tab label="Membership Billing" {...a11yProps(1)} />
-            <Tab label="Membership Invoice List" {...a11yProps(2)} />
+            <Tab label="Membership Invoice List" {...a11yProps(1)} />
           </Tabs>
         </AppBar>
         <TabPanel value={this.state.tabIndex} index={0}>
@@ -111,10 +110,13 @@ class MemberDashboard extends React.Component {
           </Paper>
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={1}>
-          Here you can view your membership billing information
-        </TabPanel>
-        <TabPanel value={this.state.tabIndex} index={2}>
-          Here you can view your membership invoice list
+          Here you can view your membership invoice list.
+          <Grid item style={{ padding: '10px' }}>
+                <TextField label = 'Transaction ID' style={{ padding: '10px' }}></TextField>
+              </Grid>
+          <Grid item style={{ padding: '10px' }}>
+              <Button  style={{ backgroundColor: '#AD0000', color: 'white' }}>Submit</Button>
+              </Grid>
         </TabPanel>
       </div>
     )
