@@ -1,10 +1,12 @@
 import React from 'react';
 import './App.css';
-import { TextField, Paper, Grid, Button, AppBar, Tabs, Tab, Typography, Box, } from '@material-ui/core'
-
+import { TextField, Paper, Grid, Button, AppBar, Tabs, Tab, Typography, Box, Backdrop } from '@material-ui/core'
+import { ScaleLoader } from 'react-spinners';
+import axios from 'axios';
+import Table from '@bit/reactstrap.reactstrap.table';
 
 // IMPORT CUSTOM REACT COMPONENTS
-
+const style = <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/semantic-ui@2.4.1/dist/semantic.min.css'/>
 
 
 // IMPORT MATERIAL UI ICONS
@@ -39,7 +41,23 @@ class MemberDashboard extends React.Component {
     super(props);
     this.state = {
       tabIndex: 0,
+      loading: false,
+      recentTransactionList: null,
     };
+  }
+
+  componentDidMount() {
+    this.setState({ loading: true });
+    axios.get('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/reporting/gettransactionsbyuserid?memid=' + this.props.userInformation.mem_id, {})
+    .then(res => {
+      if(res.data == 590) {
+        this.setState({ loading: false });
+        console.log('could not retrieve recent transactions.')
+      } else {
+        this.setState({ recentTransactionList: res.data });
+        this.setState({ loading: false });
+      }
+    })
   }
 
   // FUNCTIONS
@@ -56,11 +74,23 @@ class MemberDashboard extends React.Component {
 
     return (
       <div>
-        <h1 style={{ color: 'black', paddingTop: '100px' }}>Hello, {this.props.username}.</h1>
+        <link
+          rel='stylesheet'
+          href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'
+        />
+        <Backdrop open={this.state.loading} onClick={() => { }} style={{ zIndex: '100', color: '#fff' }}>
+          <ScaleLoader
+            size={150}
+            color={"#349CDE"}
+            loading={this.state.loading}
+          />
+        </Backdrop>
+
+        <h1 style={{ color: 'black', paddingTop: '100px' }}>Hello, {this.props.userInformation.mem_fname}.</h1>
         <AppBar position="static" style={{ backgroundColor: 'black' }}>
           <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="member dashboard tabs">
-            <Tab label="Membership Information" {...a11yProps(0)} />
-            <Tab label="Membership Invoice List" {...a11yProps(1)} />
+            <Tab label="Your Information" {...a11yProps(0)} />
+            <Tab label="Your Transactions" {...a11yProps(1)} />
           </Tabs>
         </AppBar>
         <TabPanel value={this.state.tabIndex} index={0}>
@@ -68,59 +98,71 @@ class MemberDashboard extends React.Component {
           <Paper>
             <Grid container direction="column">
               <Grid item style={{ padding: '10px' }}>
-                    <TextField label = 'First Name' style={{ padding: '10px' }}></TextField>
+                <TextField label = 'First Name' style={{ padding: '10px' }} disabled value={this.props.userInformation.mem_fname}/>
+                <TextField label = 'Last Name' style={{ padding: '10px' }} disabled value={this.props.userInformation.mem_lname}/>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-              <TextField label = 'Last Name' style={{ padding: '10px' }}></TextField>
+                
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'Member ID' style={{ padding: '10px' }}></TextField>
+                <TextField label = 'Mailing Address' style={{ padding: '10px' }} disabled value={this.props.userInformation.mem_streetnum + ' ' + this.props.userInformation.mem_streetname}/>
+                <TextField label = 'City' style={{ padding: '10px' }} disabled value={this.props.userInformation.mem_city}/>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'Mailing Address' style={{ padding: '10px' }}></TextField>
+                
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'City' style={{ padding: '10px' }}></TextField>
+                <TextField label = 'State' style={{ padding: '10px' }} disabled value={this.props.userInformation.mem_state}/>
+                <TextField label = 'Zip Code' style={{ padding: '10px' }} disabled value={this.props.userInformation.mem_zip}/>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'State' style={{ padding: '10px' }}></TextField>
+                
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'Zip Code' style={{ padding: '10px' }}></TextField>
+                <TextField label = 'Phone' style={{ padding: '10px' }} disabled value={this.props.userInformation.mem_phone}/>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'Phone' style={{ padding: '10px' }}></TextField>
-              </Grid>
-              <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'Email' style={{ padding: '10px' }}></TextField>
-              </Grid>
-              <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'Department' style={{ padding: '10px' }}></TextField>
+                <TextField label = 'Email' style={{ padding: '10px' }} disabled  value={this.props.userInformation.mem_email}/>
               </Grid>
               
               <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'Date' type = 'date' style={{ padding: '10px' }}></TextField>
+                <TextField label = 'Date of Birth' style={{ padding: '10px' }} value={Date(this.props.userInformation.mem_dob)} disabled />
               </Grid>
-              <Grid item style={{ padding: '10px' }}>
+
+              If something does not look correct, please <a href="mailto:src@test.com">email us</a>.
+
+              {/* <Grid item style={{ padding: '10px' }}>
               <Button  style={{ backgroundColor: '#AD0000', color: 'white' }}>Submit</Button>
-              </Grid>
+              </Grid> */}
                   
 
             </Grid>
           </Paper>
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={1}>
-          Here you can view your membership invoice list.
-          <Grid item style={{ padding: '10px' }}>
-                <TextField label = 'Transaction ID' style={{ padding: '10px' }}></TextField>
-              </Grid>
-          <Grid item style={{ padding: '10px' }}>
-              <Button  style={{ backgroundColor: '#AD0000', color: 'white' }}>Submit</Button>
-              </Grid>
+          <Table bordered striped={true}>
+            <thead>
+              <tr>
+                <th>Transaction Type</th>
+                <th>Transaction Amount</th>
+                <th>Transaction Date</th>
+              </tr>
+            </thead>
+            <tbody>
+          {this.state.recentTransactionList != null ? this.state.recentTransactionList.map((transaction, index) => 
+            <tr>
+              <th>{transaction.trans_type}</th>
+              <th>${transaction.trans_amount}</th>
+              <th>{transaction.trans_datetime}</th>
+            </tr>)
+            : 
+            <div></div>}
+            </tbody>
+          </Table>
         </TabPanel>
       </div>
     )
   }
 }
 
-export default MemberDashboard;
+export default MemberDashboard

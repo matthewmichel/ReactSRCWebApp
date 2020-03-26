@@ -64,7 +64,7 @@ class EmployeeDashboard extends React.Component {
 
     return (
       <div>
-        <h1 style={{ color: 'black', paddingTop: '100px' }}>Hello, {this.props.username}.</h1>
+        <h1 style={{ color: 'black', paddingTop: '100px' }}>Hello, {this.props.userInformation.mem_fname}.</h1>
         <AppBar position="static" style={{ backgroundColor: 'black' }}>
           <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="member dashboard tabs">
             <Tab label="Membership Entry" {...a11yProps(0)} />

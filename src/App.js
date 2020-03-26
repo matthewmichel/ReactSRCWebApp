@@ -1,7 +1,9 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { TextField, Paper, Grid, Button, Snackbar } from '@material-ui/core'
+import { TextField, Paper, Grid, Button, Snackbar, Backdrop, } from '@material-ui/core'
+import axios from 'axios';
+import { ScaleLoader } from 'react-spinners';
 
 // IMPORT CUSTOM REACT COMPONENTS
 import MenuDrawer from './MenuDrawer';
@@ -24,6 +26,8 @@ class App extends React.Component {
       username: 'null',
       userType: 'null',
       isLoggedIn: false,
+      userInformation: null,
+      loading: false,
     };
 
     this.ChangeCurrentScreenState = this.ChangeCurrentScreenState.bind(this);
@@ -32,19 +36,42 @@ class App extends React.Component {
   // FUNCTIONS
 
   CheckUserCredentials() {
-    if (document.getElementById('usernameInput').value == 'customer' && document.getElementById('passwordInput').value == 'password') {
-      this.setState({ username: 'member', userType: 'member', currentScreen: 'Dashboard', isLoggedIn: true });
-    } else if (document.getElementById('usernameInput').value == 'employee' && document.getElementById('passwordInput').value == 'password') {
-      this.setState({ username: 'employee', userType: 'employee', currentScreen: 'Dashboard', isLoggedIn: true });
-    } else if (document.getElementById('usernameInput').value == 'manager' && document.getElementById('passwordInput').value == 'password') {
-      this.setState({ username: 'manager', userType: 'manager', currentScreen: 'Dashboard', isLoggedIn: true });
-    } else if (document.getElementById('usernameInput').value == 'student' && document.getElementById('passwordInput').value == 'password') {
-      this.setState({ username: 'member', userType: 'member', currentScreen: 'Dashboard', isLoggedIn: true }, () => {
-        console.log('student log in')
-        console.log(this.state.username)
-        console.log(this.state.currentScreen)
-      });
-    }
+    this.setState({ loading: true });
+    axios.get('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/user/login?ux=' + document.getElementById('usernameInput').value + '&px=' + document.getElementById('passwordInput').value, {})
+      .then(res => {
+        if (res.data == 490) {
+          // WRONG USERNAME/PASSWORD
+          console.log('invalid username/password');
+          this.setState({ loading: false });
+        } else if (res.data == 590) {
+          // ISSUE OCCURRED ON SERVER
+          console.log('issue occurred on server');
+          this.setState({ loading: false });
+        } else {
+          this.setState({ userInformation: res.data });
+          console.log(JSON.stringify(res.data));
+          if (res.data.mem_type == 'A') {
+            this.setState({ userType: 'member', currentScreen: 'Dashboard', isLoggedIn: true });
+          }
+          console.log(this.state.userInformation)
+          this.setState({ loading: false });
+        }
+      })
+
+    // OLD HARD CODED CHECK CREDENTIALS
+    // if (document.getElementById('usernameInput').value == 'customer' && document.getElementById('passwordInput').value == 'password') {
+    //   this.setState({ username: 'member', userType: 'member', currentScreen: 'Dashboard', isLoggedIn: true });
+    // } else if (document.getElementById('usernameInput').value == 'employee' && document.getElementById('passwordInput').value == 'password') {
+    //   this.setState({ username: 'employee', userType: 'employee', currentScreen: 'Dashboard', isLoggedIn: true });
+    // } else if (document.getElementById('usernameInput').value == 'manager' && document.getElementById('passwordInput').value == 'password') {
+    //   this.setState({ username: 'manager', userType: 'manager', currentScreen: 'Dashboard', isLoggedIn: true });
+    // } else if (document.getElementById('usernameInput').value == 'student' && document.getElementById('passwordInput').value == 'password') {
+    //   this.setState({ username: 'member', userType: 'member', currentScreen: 'Dashboard', isLoggedIn: true }, () => {
+    //     console.log('student log in')
+    //     console.log(this.state.username)
+    //     console.log(this.state.currentScreen)
+    //   });
+    // }
   }
 
   SetUsername = (username) => {
@@ -61,6 +88,16 @@ class App extends React.Component {
   render() {
     return (
       <div className="App" >
+
+        <Backdrop open={this.state.loading} onClick={() => { }} style={{ zIndex: '100', color: '#fff' }}>
+          <ScaleLoader
+            size={150}
+            color={"#349CDE"}
+            loading={this.state.loading}
+          />
+        </Backdrop>
+
+
         <MenuDrawer changeCurrentScreenState={this.ChangeCurrentScreenState} isLoggedIn={this.state.isLoggedIn} />
 
         {this.state.currentScreen == 'Home' ?
@@ -116,9 +153,9 @@ The Department of Intramural and Recreational Sports serves to improve the quali
                 </div>
                 : this.state.currentScreen == 'Dashboard' ?
                   <div>
-                    {this.state.userType == 'member' ? <MemberDashboard username={this.state.username}/>
-                      : this.state.userType == 'employee' ? <EmployeeDashboard username={this.state.username} isManager={false}/>
-                        : this.state.userType == 'manager' ? <EmployeeDashboard username={this.state.username} isManager={true}/>
+                    {this.state.userType == 'member' ? <MemberDashboard username={this.state.username} userInformation={this.state.userInformation} />
+                      : this.state.userType == 'employee' ? <EmployeeDashboard username={this.state.username} isManager={false} userInformation={this.state.userInformation} />
+                        : this.state.userType == 'manager' ? <EmployeeDashboard username={this.state.username} isManager={true} userInformation={this.state.userInformation} />
                           : <div></div>}
                   </div>
                   : <div></div>
