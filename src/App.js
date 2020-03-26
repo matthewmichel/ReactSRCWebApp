@@ -34,7 +34,6 @@ class App extends React.Component {
   }
 
   // FUNCTIONS
-
   CheckUserCredentials() {
     this.setState({ loading: true });
     axios.get('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/user/login?ux=' + document.getElementById('usernameInput').value + '&px=' + document.getElementById('passwordInput').value, {})
@@ -52,6 +51,8 @@ class App extends React.Component {
           console.log(JSON.stringify(res.data));
           if (res.data.mem_type == 'A') {
             this.setState({ userType: 'member', currentScreen: 'Dashboard', isLoggedIn: true });
+          } else if(res.data.mem_type == 'M') {
+            this.setState({ userType: 'manager', currentScreen: 'Dashboard', isLoggedIn: true });
           }
           console.log(this.state.userInformation)
           this.setState({ loading: false });
