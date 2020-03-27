@@ -44,6 +44,18 @@ class EmployeeDashboard extends React.Component {
     };
   }
 
+  // WEB REQUESTS
+
+  createPaymentTransaction = () => {
+    this.setState({ loading: true });
+    axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/inserts/inserttransaction?eid=' + this.props.userInformation.mem_id + '&type=' + document.getElementById('transactionTypeInput').value + '&amount=' + document.getElementById('transactionAmountInput').value + '&mid=' + document.getElementById('transactionMemberIdInput').value, {})
+    .then(res => {
+      if(res.data != 590) {
+        
+      }
+    })
+  }
+
   // FUNCTIONS
 
   handleChange = (event, newValue) => {
@@ -146,13 +158,13 @@ class EmployeeDashboard extends React.Component {
         <TabPanel value={this.state.tabIndex} index={2}>
           Enter membership payment records here.
           <Grid item style={{ padding: '10px' }}>
-                <TextField label='Member ID' style={{ padding: '10px' }} ></TextField>
+                <TextField label='Member ID' style={{ padding: '10px' }} id="transactionMemberIdInput"></TextField>
               </Grid>
           <Grid item style={{ padding: '10px' }}>
-                <TextField label='Transaction Amount' style={{ padding: '10px' }} ></TextField>
+                <TextField label='Transaction Amount' style={{ padding: '10px' }} id="transactionAmountInput"></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}><InputLabel>Transaction Type</InputLabel>
-            <Select>
+            <Select id="transactionTypeInput">
               <MenuItem value={'memp'}>Membership</MenuItem>
               <MenuItem value={'l'}>Locker</MenuItem>
             </Select>
