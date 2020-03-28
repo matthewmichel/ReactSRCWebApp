@@ -1,9 +1,8 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { TextField, Paper, Grid, Button, Snackbar, Backdrop, } from '@material-ui/core'
+import { TextField, Paper, Grid, Button, Snackbar, Backdrop, CircularProgress } from '@material-ui/core'
 import axios from 'axios';
-import { ScaleLoader } from 'react-spinners';
 
 // IMPORT CUSTOM REACT COMPONENTS
 import MenuDrawer from './MenuDrawer';
@@ -91,11 +90,7 @@ class App extends React.Component {
       <div className="App" >
 
         <Backdrop open={this.state.loading} onClick={() => { }} style={{ zIndex: '100', color: '#fff' }}>
-          <ScaleLoader
-            size={150}
-            color={"#349CDE"}
-            loading={this.state.loading}
-          />
+          <CircularProgress />
         </Backdrop>
 
 

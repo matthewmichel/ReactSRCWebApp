@@ -1,9 +1,7 @@
 import React from 'react';
 import './App.css';
-import { TextField, Paper, Grid, Button, AppBar, Tabs, Tab, Typography, Box, Backdrop } from '@material-ui/core'
-import { ScaleLoader } from 'react-spinners';
+import { TextField, Paper, Grid, Button, AppBar, Tabs, Tab, Typography, Box, Backdrop, CircularProgress } from '@material-ui/core'
 import axios from 'axios';
-import Table from '@bit/reactstrap.reactstrap.table';
 
 // IMPORT CUSTOM REACT COMPONENTS
 const style = <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/semantic-ui@2.4.1/dist/semantic.min.css'/>
@@ -79,11 +77,7 @@ class MemberDashboard extends React.Component {
           href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'
         />
         <Backdrop open={this.state.loading} onClick={() => { }} style={{ zIndex: '100', color: '#fff' }}>
-          <ScaleLoader
-            size={150}
-            color={"#349CDE"}
-            loading={this.state.loading}
-          />
+          <CircularProgress />
         </Backdrop>
 
         <h1 style={{ color: 'black', paddingTop: '100px' }}>Hello, {this.props.userInformation.mem_fname}.</h1>
@@ -140,7 +134,7 @@ class MemberDashboard extends React.Component {
           </Paper>
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={1}>
-          <Table bordered striped={true}>
+          <table border="1" style={{ padding: '10px' }}>
             <thead>
               <tr>
                 <th>Transaction Type</th>
@@ -151,14 +145,14 @@ class MemberDashboard extends React.Component {
             <tbody>
           {this.state.recentTransactionList != null ? this.state.recentTransactionList.map((transaction, index) => 
             <tr>
-              <th>{transaction.trans_type}</th>
+              <th>{transaction.trans_type == "memp" ? "Membership Payment" : transaction.trans_type == "L" ? "Locker Payment" : ""}</th>
               <th>${transaction.trans_amount}</th>
               <th>{transaction.trans_datetime}</th>
             </tr>)
             : 
             <div></div>}
             </tbody>
-          </Table>
+          </table>
         </TabPanel>
       </div>
     )
