@@ -37,7 +37,7 @@ function a11yProps(index) {
   };
 }
 
-class EmployeeDashboard extends React.Component {
+class ManagerDashboard extends React.Component {
 
   constructor(props) {
     super(props);
@@ -138,7 +138,7 @@ class EmployeeDashboard extends React.Component {
 
   FindAvailableLocker = () => {
     this.setState({ loading: true })
-    
+
   }
 
   // FUNCTIONS
@@ -422,4 +422,4 @@ pad2 = (number) => {
   }
 }
 
-export default EmployeeDashboard;
+export default ManagerDashboard;

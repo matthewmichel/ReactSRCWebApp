@@ -13,7 +13,7 @@ import MemberDashboard from './MemberDashboard';
 import FacebookLogo from '@material-ui/icons/Facebook';
 import TwitterLogo from '@material-ui/icons/Twitter';
 import YouTubeLogo from '@material-ui/icons/YouTube';
-import EmployeeDashboard from './EmployeeDashboard';
+import ManagerDashboard from './ManagerDashboard';
 
 
 class App extends React.Component {
@@ -150,8 +150,8 @@ The Department of Intramural and Recreational Sports serves to improve the quali
                 : this.state.currentScreen == 'Dashboard' ?
                   <div>
                     {this.state.userType == 'member' ? <MemberDashboard username={this.state.username} userInformation={this.state.userInformation} />
-                      : this.state.userType == 'employee' ? <EmployeeDashboard username={this.state.username} isManager={false} userInformation={this.state.userInformation} />
-                        : this.state.userType == 'manager' ? <EmployeeDashboard username={this.state.username} isManager={true} userInformation={this.state.userInformation} />
+                      //: this.state.userType == 'employee' ? <EmployeeDashboard username={this.state.username} isManager={false} userInformation={this.state.userInformation} />
+                        : this.state.userType == 'manager' ? <ManagerDashboard username={this.state.username} isManager={true} userInformation={this.state.userInformation} />
                           : <div></div>}
                   </div>
                   : <div></div>
