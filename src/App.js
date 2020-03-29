@@ -8,12 +8,14 @@ import axios from 'axios';
 import MenuDrawer from './MenuDrawer';
 import { fontFamily } from '@material-ui/system';
 import MemberDashboard from './MemberDashboard';
+import EmployeeDashboard from './EmployeeDashboard';
 
 // IMPORT MATERIAL UI ICONS
 import FacebookLogo from '@material-ui/icons/Facebook';
 import TwitterLogo from '@material-ui/icons/Twitter';
 import YouTubeLogo from '@material-ui/icons/YouTube';
 import ManagerDashboard from './ManagerDashboard';
+
 
 
 class App extends React.Component {
@@ -52,6 +54,9 @@ class App extends React.Component {
             this.setState({ userType: 'member', currentScreen: 'Dashboard', isLoggedIn: true });
           } else if(res.data.mem_type == 'M') {
             this.setState({ userType: 'manager', currentScreen: 'Dashboard', isLoggedIn: true });
+          }
+          else if(res.data.mem_type == 'E') {
+            this.setState({ userType: 'employee', currentScreen: 'Dashboard', isLoggedIn: true });
           }
           console.log(this.state.userInformation)
           this.setState({ loading: false });
@@ -150,7 +155,7 @@ The Department of Intramural and Recreational Sports serves to improve the quali
                 : this.state.currentScreen == 'Dashboard' ?
                   <div>
                     {this.state.userType == 'member' ? <MemberDashboard username={this.state.username} userInformation={this.state.userInformation} />
-                      //: this.state.userType == 'employee' ? <EmployeeDashboard username={this.state.username} isManager={false} userInformation={this.state.userInformation} />
+                      : this.state.userType == 'employee' ? <EmployeeDashboard username={this.state.username} isManager={false} userInformation={this.state.userInformation} />
                         : this.state.userType == 'manager' ? <ManagerDashboard username={this.state.username} isManager={true} userInformation={this.state.userInformation} />
                           : <div></div>}
                   </div>
