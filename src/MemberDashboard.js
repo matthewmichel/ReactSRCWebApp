@@ -82,7 +82,7 @@ class MemberDashboard extends React.Component {
 
         <h1 style={{ color: 'black', paddingTop: '100px' }}>Hello, {this.props.userInformation.mem_fname}.</h1>
         <AppBar position="static" style={{ backgroundColor: 'black' }}>
-          <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="member dashboard tabs">
+          <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="member dashboard tabs" variant="scrollable">
             <Tab label="Your Information" {...a11yProps(0)} />
             <Tab label="Your Transactions" {...a11yProps(1)} />
           </Tabs>

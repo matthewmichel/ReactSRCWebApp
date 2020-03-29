@@ -7,6 +7,8 @@ import axios from 'axios';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import { getDynamicStyles } from 'jss';
+import { getDefaultWatermarks } from 'istanbul-lib-report';
 
 
 // IMPORT MATERIAL UI ICONS
@@ -42,6 +44,8 @@ class EmployeeDashboard extends React.Component {
     this.state = {
       tabIndex: 0,
       loading: false,
+      lookupMemberData: null,
+
     };
   }
 
@@ -86,7 +90,80 @@ class EmployeeDashboard extends React.Component {
       })
   }
 
+  LookupMemberById = () => {
+    this.setState({ loading: true });
+    axios.get('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/reporting/getuserinformationbyuserid?memid=' + document.getElementById('lookupMemberIdTxt').value, {})
+      .then(res => {
+        if (res.data != 590) {
+          this.setState({ lookupMemberData: res.data, lookupMemberCompleted: true });
+          this.setState({ loading: false });
+        } else {
+          console.log('error retrieving member information');
+          console.log(res);
+          this.setState({ loading: false });
+        }
+      })
+  }
+
+  LookupMemberByEmail = () => {
+    this.setState({ loading: true });
+    axios.get('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/reporting/getuserinformationbyemail?mememail=' + document.getElementById('lookupMemberEmailTxt').value, {})
+      .then(res => {
+        if (res.data != 590) {
+          this.setState({ lookupMemberData: res.data, lookupMemberCompleted: true });
+          this.setState({ loading: false });
+        } else {
+          console.log('error retrieving member information');
+          console.log(res);
+          this.setState({ loading: false });
+        }
+      })
+  }
+
+  UpdateUserInformation = () => {
+    this.setState({ loading: true });
+    axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/updates/updatemember?fname=' + document.getElementById('firstNameTxt').value + '&lname=' + document.getElementById('lastNameTxt').value + '&streetnum=' + document.getElementById('streetNumberTxt').value + '&streetname=' + document.getElementById('streetNameTxt').value + '&city=' + document.getElementById('cityTxt').value + '&state=' + document.getElementById('stateTxt').value + '&zip=' + document.getElementById('zipCodeTxt').value + '&phone=' + document.getElementById('phoneTxt').value + '&email=' + document.getElementById('emailTxt').value + '&econtact=' + document.getElementById('emergencyContactNameTxt').value + '&ephone=' + document.getElementById('emergencyContactPhoneTxt').value + '&dob=' + document.getElementById('dateOfBirthTxt').value + '&mid=' + this.state.lookupMemberData.mem_id)
+      .then((res) => {
+        if(res.data == 290) {
+            console.log('successfully updated member information.')
+            this.setState({ loading: false });
+        } else {
+          console.log('could not update member information')
+          console.log(res)
+          this.setState({ loading: false });
+        }
+      })
+  }
+
   // FUNCTIONS
+
+  sqlToJsDate = (sqlDate) => {
+    // 2020-03-  03T00:00:00.000Z
+    //sqlDate in SQL DATETIME format ("yyyy-mm-dd hh:mm:ss.ms")
+    var sqlDateArr1 = sqlDate.split("-");
+    //format of sqlDateArr1[] = ['yyyy','mm','dd hh:mm:ms']
+    var sYear = sqlDateArr1[0];
+    var sMonth = (Number(sqlDateArr1[1]) - 1).toString();
+    var sqlDateArr2 = sqlDateArr1[2].split("T");
+    //format of sqlDateArr2[] = ['dd', 'hh:mm:ss.ms']
+    var sDay = sqlDateArr2[0];
+    var sqlDateArr3 = sqlDateArr2[1].split(":");
+    //format of sqlDateArr3[] = ['hh','mm','ss.ms']
+    var sHour = sqlDateArr3[0];
+    var sMinute = sqlDateArr3[1];
+    var sqlDateArr4 = sqlDateArr3[2].split(".");
+    //format of sqlDateArr4[] = ['ss','ms']
+    var sSecond = sqlDateArr4[0];
+    var sMillisecond = sqlDateArr4[1];
+    var sMillisecond = sMillisecond.substring(0, sMillisecond.length - 1);
+    var newDate = new Date(sYear + '-' + sMonth + '-' + sDay)
+    return newDate.getFullYear() + '-' + this.pad2(newDate.getMonth() + 2) + '-' + this.pad2(newDate.getDate());
+}
+pad2 = (number) => {
+   
+  return (number < 10 ? '0' : '') + number
+
+}
 
   handleChange = (event, newValue) => {
     this.setState({ tabIndex: newValue });
@@ -113,7 +190,7 @@ class EmployeeDashboard extends React.Component {
 
         <h1 style={{ color: 'black', paddingTop: '100px' }}>Hello, {this.props.userInformation.mem_fname}.</h1>
         <AppBar position="static" style={{ backgroundColor: 'black' }}>
-          <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="member dashboard tabs">
+          <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="member dashboard tabs" variant="scrollable">
             <Tab label="Membership Entry" {...a11yProps(0)} />
             <Tab label="Membership Lookup" {...a11yProps(1)} />
             <Tab label="Payment Entry" {...a11yProps(2)} />
@@ -174,21 +251,63 @@ class EmployeeDashboard extends React.Component {
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={1}> {/* LOOKUP MEMBER TAB */}
           Look up current members based on various information.
-          <Grid item style={{ padding: '10px' }}>
-            <TextField label='Member ID' style={{ padding: '10px' }} ></TextField>
-          </Grid>
-          <Grid item style={{ padding: '10px' }}>
-            <TextField label='First Name' style={{ padding: '10px' }} ></TextField>
-          </Grid>
-          <Grid item style={{ padding: '10px' }}>
-            <TextField label='Last Name' style={{ padding: '10px' }} ></TextField>
-          </Grid>
-          <Grid item style={{ padding: '10px' }}>
-            <TextField label='Email' style={{ padding: '10px' }} ></TextField>
-          </Grid>
-          <Grid item style={{ padding: '10px' }}>
-            <Button style={{ backgroundColor: '#AD0000', color: 'white' }}>Submit</Button>
-          </Grid>
+          {!this.state.lookupMemberCompleted ?
+            <div>
+              <Grid item style={{ padding: '10px' }}>
+                <TextField label='Member ID' style={{ padding: '10px' }} id="lookupMemberIdTxt" ></TextField>
+                <Button variant="outlined" onClick={() => this.LookupMemberById()}>Lookup By ID</Button>
+              </Grid>
+              <Grid item style={{ padding: '10px' }}>
+                <h2>OR</h2>
+              </Grid>
+              <Grid item style={{ padding: '10px' }}>
+              <TextField label='Member Email' style={{ padding: '10px' }} id="lookupMemberEmailTxt" ></TextField>
+                <Button variant="outlined" onClick={() => this.LookupMemberByEmail()}>Lookup By Email</Button>
+              </Grid>
+            </div>
+            :
+            <div>
+              <Grid container direction="column">
+                <Grid item style={{ padding: '10px' }}>
+                  <TextField label='Member ID' style={{ padding: '10px' }} id="memIDTxt" defaultValue={this.state.lookupMemberData.mem_id} disabled></TextField>
+                </Grid>
+                <Grid item style={{ padding: '10px' }}>
+                  <TextField label='First Name' style={{ padding: '10px' }} id="firstNameTxt" defaultValue={this.state.lookupMemberData.mem_fname}></TextField>
+                  <TextField label='Last Name' style={{ padding: '10px' }} id="lastNameTxt" defaultValue={this.state.lookupMemberData.mem_lname}></TextField>
+                </Grid>
+                <Grid item style={{ padding: '10px' }}>
+                  <TextField label='Street Number' style={{ padding: '10px' }} id="streetNumberTxt" defaultValue={this.state.lookupMemberData.mem_streetnum}></TextField>
+                  <TextField label='Street Name' style={{ padding: '10px' }} id="streetNameTxt" defaultValue={this.state.lookupMemberData.mem_streetname}></TextField>
+                </Grid>
+                <Grid item style={{ padding: '10px' }}>
+                  <TextField label='City' style={{ padding: '10px' }} id="cityTxt" defaultValue={this.state.lookupMemberData.mem_city}></TextField>
+                  <TextField label='State' style={{ padding: '10px' }} id="stateTxt" defaultValue={this.state.lookupMemberData.mem_state}></TextField>
+                </Grid>
+                <Grid item style={{ padding: '10px' }}>
+                  <TextField label='Zip Code' style={{ padding: '10px' }} id="zipCodeTxt" defaultValue={this.state.lookupMemberData.mem_zip} ></TextField>
+                </Grid>
+                <Grid item style={{ padding: '10px' }}>
+                  <TextField label='Phone' style={{ padding: '10px' }} id="phoneTxt" defaultValue={this.state.lookupMemberData.mem_phone}></TextField>
+                  <TextField label='Email' style={{ padding: '10px' }} id="emailTxt" defaultValue={this.state.lookupMemberData.mem_email}></TextField>
+                </Grid>
+                <Grid item style={{ padding: '10px' }}>
+                  <TextField label='Date of Birth' type='date' style={{ padding: '10px' }} id="dateOfBirthTxt" defaultValue={this.sqlToJsDate(this.state.lookupMemberData.mem_dob)}></TextField>
+                </Grid>
+                <Grid item style={{ padding: '10px' }}>
+                  <TextField label='Emergency Contact Name' style={{ padding: '10px' }} id="emergencyContactNameTxt" defaultValue={this.state.lookupMemberData.mem_emergencycontact}></TextField>
+                </Grid>
+                <Grid item style={{ padding: '10px' }}>
+                  <TextField label='Emergency Contact Phone Number' style={{ padding: '10px' }} id="emergencyContactPhoneTxt" defaultValue={this.state.lookupMemberData.mem_emergencyphone}></TextField>
+                </Grid>
+                <Grid item style={{ padding: '10px' }}>
+                  <TextField label='Date of Registration' type='date' style={{ padding: '10px' }} id="dateOfRegistrationTxt" defaultValue={this.sqlToJsDate(this.state.lookupMemberData.mem_registrationdate)} disabled></TextField>
+                </Grid>
+                <Grid item style={{ padding: '10px' }}>
+                  <Button variant="outlined" style={{ margin: '10px' }} onClick={() => this.UpdateUserInformation()}>Update Information</Button>
+                  <Button variant="outlined" style={{ margin: '10px' }} onClick={() => this.setState({ lookupMemberCompleted: false })}>Find Another Member</Button>
+                </Grid>
+              </Grid>
+            </div>}
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={2}> {/* ADD TRANSACTION TAB */}
           Enter membership payment records here.
