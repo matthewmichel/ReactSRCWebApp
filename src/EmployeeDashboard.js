@@ -45,7 +45,8 @@ class EmployeeDashboard extends React.Component {
       tabIndex: 0,
       loading: false,
       lookupMemberData: null,
-
+      availableLockerID: '',
+      lockerReadyToRent: false,
     };
   }
 
@@ -133,6 +134,11 @@ class EmployeeDashboard extends React.Component {
           this.setState({ loading: false });
         }
       })
+  }
+
+  FindAvailableLocker = () => {
+    this.setState({ loading: true })
+    
   }
 
   // FUNCTIONS
@@ -386,9 +392,6 @@ pad2 = (number) => {
             <Grid item style={{ padding: '10px' }}>
             <TextField label='Member ID' style={{ padding: '10px' }}></TextField>
           </Grid>
-          <Grid item style={{ padding: '10px' }}>
-            <TextField label='Locker ID' style={{ padding: '10px' }}></TextField>
-          </Grid>
           <Grid item style={{ padding: '10px' }}><InputLabel>Locker Area</InputLabel>
             <Select>
               <MenuItem value={'m'}>Male</MenuItem>
@@ -402,7 +405,13 @@ pad2 = (number) => {
             </Select>
           </Grid>
           <Grid item style={{ padding: '10px' }}>
-            <Button style={{ backgroundColor: '#AD0000', color: 'white' }}>Submit</Button>
+            <Button style={{ backgroundColor: '#AD0000', color: 'white' }}>Find Available Locker</Button>
+          </Grid>
+          <Grid item style={{ padding: '10px' }}>
+            <TextField label='Locker ID' style={{ padding: '10px' }} variant= "outlined" disabled value={this.state.availableLockerID}></TextField>
+          </Grid>
+          <Grid item style={{ padding: '10px' }}>
+            {this.state.lockerReadyToRent ? <Button style={{ backgroundColor: '#AD0000', color: 'white' }} variant="outlined">Rent Locker</Button> : <Button style={{ backgroundColor: '#AD0000', color: 'white' }} variant="outlined" disbled >Rent Locker</Button>}
           </Grid>
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={6}> {/* LOOKUP LOCKER TAB */}
