@@ -47,6 +47,7 @@ class EmployeeDashboard extends React.Component {
       lookupMemberData: null,
       availableLockerID: '',
       lockerReadyToRent: false,
+      
     };
   }
 
@@ -136,12 +137,13 @@ class EmployeeDashboard extends React.Component {
       })
   }
 
-  componentDidMount() {
+  LookupTransactionById = () => {
     this.setState({ loading: true });
     axios.get('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/reporting/gettransactionsbyuserid?memid=' + document.getElementById('lookupMemberIdTxt').value, {})
     .then(res => {
       if (res.data != 590) {
-        this.setState({ lookupMemberData: res.data, lookupMemberCompleted: true });
+        console.log(res.data);
+        this.setState({ recentTransactionList: res.data, lookupTransactionCompleted: true });
         this.setState({ loading: false });
       } else {
         console.log('error retrieving member information');
@@ -350,15 +352,38 @@ pad2 = (number) => {
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={3}> {/* ADD MEMBERSHIP INVOICE LISTS TAB */}
           Enter membership invoice lists here.
-
+          {!this.state.lookupTransactionCompleted ?
             <div>
               <Grid item style={{ padding: '10px' }}>
                 <TextField label='Member ID' style={{ padding: '10px' }} id="lookupMemberIdTxt" ></TextField>
-                <Button variant="outlined" onClick={() => this.LookupMemberById()}>Lookup By ID</Button>
+                <Button variant="outlined" onClick={() => this.LookupTransactionById()}>Lookup By ID</Button>
               </Grid>
             </div>
-            
-
+            :
+            <div>
+            <table border="1" style={{ padding: '10px' }}>
+            <thead>
+              <tr>
+                <th>Transaction Type</th>
+                <th>Transaction Amount</th>
+                <th>Transaction Date</th>
+              </tr>
+            </thead>
+            <tbody>
+          {this.state.recentTransactionList != null ? this.state.recentTransactionList.map((transaction, index) => 
+            <tr>
+              <th>{transaction.trans_type == "memp" ? "Membership Payment" : transaction.trans_type == "L" ? "Locker Payment" : ""}</th>
+              <th>${transaction.trans_amount}</th>
+              <th>{transaction.trans_datetime}</th>
+            </tr>)
+            : 
+            <div></div>}
+            </tbody>
+          </table>
+          <Grid item style={{ padding: '10px' }}>
+                  <Button variant="outlined" style={{ margin: '10px' }} onClick={() => this.setState({ lookupTransactionCompleted: false })}>Find Another Member's Transactions</Button>
+                </Grid>
+                </div>}
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={4}> {/* ADD EQUIPMENT UTILIZATION TAB */}
           Enter equipment utilization counts here.
