@@ -138,7 +138,53 @@ class ManagerDashboard extends React.Component {
 
   FindAvailableLocker = () => {
     this.setState({ loading: true })
+    var mf, ls;
+    if(document.getElementById('rentLockerMF').textContent == "Male") {
+      mf = "m"
+    } else if (document.getElementById('rentLockerMF').textContent == "Female") {
+      mf = "f"
+    }
 
+    if(document.getElementById('rentLockerLS').textContent == "Large") {
+      ls = "l"
+    } else if (document.getElementById('rentLockerLS').textContent == "Small") {
+      ls = "s"
+    }
+    console.log(mf + ' ' + ls)
+
+    axios.get('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/findavailablelocker?mf=' + mf + '&ls=' + ls, {})
+    .then(res => {
+      if(res.data == null) {
+        console.log("no available lockers with those specifications.");
+        console.log(res)
+        this.setState({ loading: false });
+      } else if (res.data == 590) {
+        console.log("server error");
+        console.log(res)
+        this.setState({ loading: false });
+      } else {
+        console.log(res)
+        document.getElementById('rentLockerID').value = res.data.lock_id
+        this.setState({ availableLockerID: res.data.lock_id, lockerReadyToRent: true });
+        this.setState({ loading: false });
+      }
+    })
+
+  }
+
+  RentLocker = () => {
+    this.setState({ loading: true });
+    axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/inserts/rentlocker?mid=' + document.getElementById('rentLockerMemberId').value + '&eid=' + this.props.userInformation.mem_id + '&lid=' + this.state.availableLockerID + '&lamount=20', {})
+    .then(res => {
+      if(res.data == 290) {
+        console.log('successfully rented locker.');
+        this.setState({ loading: false });
+      } else {
+        console.log('error renting locker')
+        console.log(res)
+        this.setState({ loading: false });
+      }
+    })
   }
 
   // FUNCTIONS
@@ -390,28 +436,28 @@ pad2 = (number) => {
         <TabPanel value={this.state.tabIndex} index={5}> {/* ADD LOCKER INFORMATION TAB */}
           Enter Locker information here.
             <Grid item style={{ padding: '10px' }}>
-            <TextField label='Member ID' style={{ padding: '10px' }}></TextField>
+            <TextField id="rentLockerMemberId" label='Member ID' style={{ padding: '10px' }}></TextField>
           </Grid>
-          <Grid item style={{ padding: '10px' }}><InputLabel>Locker Area</InputLabel>
-            <Select>
-              <MenuItem value={'m'}>Male</MenuItem>
-              <MenuItem value={'f'}>Female</MenuItem>
-            </Select>
-          </Grid>
-          <Grid item style={{ padding: '10px' }}><InputLabel>Locker Size</InputLabel>
-            <Select>
-              <MenuItem value={'s'}>Small</MenuItem>
-              <MenuItem value={'l'}>Large</MenuItem>
+          <Grid item style={{ padding: '10px' }}>
+            <Select id="rentLockerMF" defaultValue={'Male'}>
+              <MenuItem value={'Male'}>Male</MenuItem>
+              <MenuItem value={'Female'}>Female</MenuItem>
             </Select>
           </Grid>
           <Grid item style={{ padding: '10px' }}>
-            <Button style={{ backgroundColor: '#AD0000', color: 'white' }}>Find Available Locker</Button>
+            <Select id="rentLockerLS" defaultValue={'Large'}>
+              <MenuItem value={'Small'}>Small</MenuItem>
+              <MenuItem value={'Large'}>Large</MenuItem>
+            </Select>
           </Grid>
           <Grid item style={{ padding: '10px' }}>
-            <TextField label='Locker ID' style={{ padding: '10px' }} variant= "outlined" disabled value={this.state.availableLockerID}></TextField>
+            <Button onClick={() => this.FindAvailableLocker()} style={{ backgroundColor: '#AD0000', color: 'white' }}>Find Available Locker</Button>
           </Grid>
           <Grid item style={{ padding: '10px' }}>
-            {this.state.lockerReadyToRent ? <Button style={{ backgroundColor: '#AD0000', color: 'white' }} variant="outlined">Rent Locker</Button> : <Button style={{ backgroundColor: '#AD0000', color: 'white' }} variant="outlined" disbled >Rent Locker</Button>}
+            <TextField id="rentLockerID" label='Locker ID' style={{ padding: '10px' }} variant= "outlined" disabled value={this.state.availableLockerID}></TextField>
+          </Grid>
+          <Grid item style={{ padding: '10px' }}>
+            {this.state.lockerReadyToRent ? <Button onClick={() => this.RentLocker()} style={{ backgroundColor: '#AD0000', color: 'white' }} variant="outlined">Rent Locker</Button> : <Button style={{ backgroundColor: '#dedede', color: 'white' }} variant="outlined" disabled >Rent Locker</Button>}
           </Grid>
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={6}> {/* LOOKUP LOCKER TAB */}
