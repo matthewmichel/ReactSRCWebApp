@@ -47,6 +47,8 @@ class ManagerDashboard extends React.Component {
       lookupMemberData: null,
       availableLockerID: '',
       lockerReadyToRent: false,
+      lookupLockerInformationComplete: false,
+      lookupLockerData: null,
     };
   }
 
@@ -125,9 +127,9 @@ class ManagerDashboard extends React.Component {
     this.setState({ loading: true });
     axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/updates/updatemember?fname=' + document.getElementById('firstNameTxt').value + '&lname=' + document.getElementById('lastNameTxt').value + '&streetnum=' + document.getElementById('streetNumberTxt').value + '&streetname=' + document.getElementById('streetNameTxt').value + '&city=' + document.getElementById('cityTxt').value + '&state=' + document.getElementById('stateTxt').value + '&zip=' + document.getElementById('zipCodeTxt').value + '&phone=' + document.getElementById('phoneTxt').value + '&email=' + document.getElementById('emailTxt').value + '&econtact=' + document.getElementById('emergencyContactNameTxt').value + '&ephone=' + document.getElementById('emergencyContactPhoneTxt').value + '&dob=' + document.getElementById('dateOfBirthTxt').value + '&mid=' + this.state.lookupMemberData.mem_id)
       .then((res) => {
-        if(res.data == 290) {
-            console.log('successfully updated member information.')
-            this.setState({ loading: false });
+        if (res.data == 290) {
+          console.log('successfully updated member information.')
+          this.setState({ loading: false });
         } else {
           console.log('could not update member information')
           console.log(res)
@@ -139,13 +141,13 @@ class ManagerDashboard extends React.Component {
   FindAvailableLocker = () => {
     this.setState({ loading: true })
     var mf, ls;
-    if(document.getElementById('rentLockerMF').textContent == "Male") {
+    if (document.getElementById('rentLockerMF').textContent == "Male") {
       mf = "m"
     } else if (document.getElementById('rentLockerMF').textContent == "Female") {
       mf = "f"
     }
 
-    if(document.getElementById('rentLockerLS').textContent == "Large") {
+    if (document.getElementById('rentLockerLS').textContent == "Large") {
       ls = "l"
     } else if (document.getElementById('rentLockerLS').textContent == "Small") {
       ls = "s"
@@ -153,38 +155,54 @@ class ManagerDashboard extends React.Component {
     console.log(mf + ' ' + ls)
 
     axios.get('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/findavailablelocker?mf=' + mf + '&ls=' + ls, {})
-    .then(res => {
-      if(res.data == null) {
-        console.log("no available lockers with those specifications.");
-        console.log(res)
-        this.setState({ loading: false });
-      } else if (res.data == 590) {
-        console.log("server error");
-        console.log(res)
-        this.setState({ loading: false });
-      } else {
-        console.log(res)
-        document.getElementById('rentLockerID').value = res.data.lock_id
-        this.setState({ availableLockerID: res.data.lock_id, lockerReadyToRent: true });
-        this.setState({ loading: false });
-      }
-    })
+      .then(res => {
+        if (res.data == null) {
+          console.log("no available lockers with those specifications.");
+          console.log(res)
+          this.setState({ loading: false });
+        } else if (res.data == 590) {
+          console.log("server error");
+          console.log(res)
+          this.setState({ loading: false });
+        } else {
+          console.log(res)
+          document.getElementById('rentLockerID').value = res.data.lock_id
+          this.setState({ availableLockerID: res.data.lock_id, lockerReadyToRent: true });
+          this.setState({ loading: false });
+        }
+      })
 
   }
 
   RentLocker = () => {
     this.setState({ loading: true });
     axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/inserts/rentlocker?mid=' + document.getElementById('rentLockerMemberId').value + '&eid=' + this.props.userInformation.mem_id + '&lid=' + this.state.availableLockerID + '&lamount=20', {})
-    .then(res => {
-      if(res.data == 290) {
-        console.log('successfully rented locker.');
-        this.setState({ loading: false });
-      } else {
-        console.log('error renting locker')
-        console.log(res)
-        this.setState({ loading: false });
-      }
-    })
+      .then(res => {
+        if (res.data == 290) {
+          console.log('successfully rented locker.');
+          this.setState({ loading: false });
+        } else {
+          console.log('error renting locker')
+          console.log(res)
+          this.setState({ loading: false });
+        }
+      })
+  }
+
+  GetLockerInformationById = () => {
+    this.setState({ loading: true });
+    axios.get('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/getlockerinformationbyid?lockid=' + document.getElementById('lookupLockerId').value, {})
+      .then(res => {
+        if(res.data != 590) {
+          this.setState({ lookupLockerData: res.data, lookupLockerInformationComplete: true });
+          this.setState({ loading: false });
+          console.log(res.data)
+        } else {
+          console.log('could not retrieve locker information')
+          console.log(res.data)
+          this.setState({ loading: false });
+        }
+      })
   }
 
   // FUNCTIONS
@@ -210,12 +228,12 @@ class ManagerDashboard extends React.Component {
     var sMillisecond = sMillisecond.substring(0, sMillisecond.length - 1);
     var newDate = new Date(sYear + '-' + sMonth + '-' + sDay)
     return newDate.getFullYear() + '-' + this.pad2(newDate.getMonth() + 2) + '-' + this.pad2(newDate.getDate());
-}
-pad2 = (number) => {
-   
-  return (number < 10 ? '0' : '') + number
+  }
+  pad2 = (number) => {
 
-}
+    return (number < 10 ? '0' : '') + number
+
+  }
 
   handleChange = (event, newValue) => {
     this.setState({ tabIndex: newValue });
@@ -313,7 +331,7 @@ pad2 = (number) => {
                 <h2>OR</h2>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
-              <TextField label='Member Email' style={{ padding: '10px' }} id="lookupMemberEmailTxt" ></TextField>
+                <TextField label='Member Email' style={{ padding: '10px' }} id="lookupMemberEmailTxt" ></TextField>
                 <Button variant="outlined" onClick={() => this.LookupMemberByEmail()}>Lookup By Email</Button>
               </Grid>
             </div>
@@ -454,7 +472,7 @@ pad2 = (number) => {
             <Button onClick={() => this.FindAvailableLocker()} style={{ backgroundColor: '#AD0000', color: 'white' }}>Find Available Locker</Button>
           </Grid>
           <Grid item style={{ padding: '10px' }}>
-            <TextField id="rentLockerID" label='Locker ID' style={{ padding: '10px' }} variant= "outlined" disabled value={this.state.availableLockerID}></TextField>
+            <TextField id="rentLockerID" label='Locker ID' style={{ padding: '10px' }} variant="outlined" disabled value={this.state.availableLockerID}></TextField>
           </Grid>
           <Grid item style={{ padding: '10px' }}>
             {this.state.lockerReadyToRent ? <Button onClick={() => this.RentLocker()} style={{ backgroundColor: '#AD0000', color: 'white' }} variant="outlined">Rent Locker</Button> : <Button style={{ backgroundColor: '#dedede', color: 'white' }} variant="outlined" disabled >Rent Locker</Button>}
@@ -462,6 +480,18 @@ pad2 = (number) => {
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={6}> {/* LOOKUP LOCKER TAB */}
           Look up current locker information here.
+          {!this.state.lookupLockerInformationComplete ?
+            <div>
+              <TextField id="lookupLockerId" label="Locker ID" />
+              <Button onClick={() => this.GetLockerInformationById()} variant="outlined">Search</Button>
+            </div>
+            :
+            <div>
+              <p>{JSON.stringify(this.state.lookupLockerData)}</p>
+              <Button onClick={() => this.setState({ lookupLockerInformationComplete: false })} variant="outlined">Lookup New Locker</Button>
+            </div>
+          }
+
         </TabPanel>
       </div>
     )
