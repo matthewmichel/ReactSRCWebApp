@@ -105,6 +105,7 @@ class App extends React.Component {
           <header className="App-header">
             <h1 style={{ color: '#AD0000', fontFamily: 'NCAALouisvilleCardinals', fontSize: '7em', marginBottom: '1em' }}>U of L</h1>
             <h2 style={{ color: '#AD0000' }}>Student Recreation Center</h2>
+            <Button onClick={() => this.setState({ currentScreen: 'Login' })} style={{ fontFamily: 'NCAALouisvilleCardinals', color: '#AD0000', height: '60px', width: '200px', fontSize: '30px' }} variant="outlined" >Log In</Button>
           </header>
           : this.state.currentScreen == 'About' ?
             <div>

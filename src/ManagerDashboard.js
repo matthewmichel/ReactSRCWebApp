@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import { TextField, Paper, Grid, Button, AppBar, Tabs, Tab, Typography, Box, Backdrop, CircularProgress } from '@material-ui/core'
 import axios from 'axios';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 
 // IMPORT CUSTOM REACT COMPONENTS
 import Select from '@material-ui/core/Select';
@@ -49,6 +50,9 @@ class ManagerDashboard extends React.Component {
       lockerReadyToRent: false,
       lookupLockerInformationComplete: false,
       lookupLockerData: null,
+      lookupTransactionCompleted: false,
+      recentTransactionList: null,
+      transactionLineChartData: null,
     };
   }
 
@@ -138,6 +142,22 @@ class ManagerDashboard extends React.Component {
       })
   }
 
+  LookupTransactionById = () => {
+    this.setState({ loading: true });
+    axios.get('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/reporting/gettransactionsbyuserid?memid=' + document.getElementById('lookupMemberIdTxt').value, {})
+      .then(res => {
+        if (res.data != 590) {
+          console.log(res.data);
+          this.setState({ recentTransactionList: res.data, lookupTransactionCompleted: true });
+          this.setState({ loading: false });
+        } else {
+          console.log('error retrieving member information');
+          console.log(res);
+          this.setState({ loading: false });
+        }
+      })
+  }
+
   FindAvailableLocker = () => {
     this.setState({ loading: true })
     var mf, ls;
@@ -193,7 +213,7 @@ class ManagerDashboard extends React.Component {
     this.setState({ loading: true });
     axios.get('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/getlockerinformationbyid?lockid=' + document.getElementById('lookupLockerId').value, {})
       .then(res => {
-        if(res.data != 590) {
+        if (res.data != 590) {
           this.setState({ lookupLockerData: res.data, lookupLockerInformationComplete: true });
           this.setState({ loading: false });
           console.log(res.data)
@@ -205,7 +225,34 @@ class ManagerDashboard extends React.Component {
       })
   }
 
+  GetTransactionsOverNDays = (daterange) => {
+    this.setState({ loading: true });
+    axios.get('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/reporting/transactionsoverndays?daterange=' + daterange, {})
+      .then(res => {
+        if (res.data != 590) {
+          var dataArray = res.data;
+          for(var i = 0; i < dataArray.length; i++) {
+            dataArray[i].date = this.sqlToJsDate(dataArray[i].date)
+          }
+          this.setState({ transactionLineChartData: dataArray });
+          this.setState({ loading: false })
+          console.log(res)
+        } else {
+          console.log(res)
+          this.setState({ loading: false });
+        }
+      })
+  }
+
+  componentDidMount() {
+    this.GetTransactionsOverNDays(7);
+  }
+
   // FUNCTIONS
+
+  OnTransactionDateRangeChange = (event) => {
+    this.GetTransactionsOverNDays(event.target.value);
+  }
 
   sqlToJsDate = (sqlDate) => {
     // 2020-03-  03T00:00:00.000Z
@@ -268,6 +315,7 @@ class ManagerDashboard extends React.Component {
             <Tab label="Equipment Utilization" {...a11yProps(4)} />
             <Tab label="Locker Entry" {...a11yProps(5)} />
             <Tab label="Locker Lookup" {...a11yProps(6)} />
+            <Tab label="Reporting" {...a11yProps(7)} />
           </Tabs>
         </AppBar>
         <TabPanel value={this.state.tabIndex} index={0}> {/* ADD MEMBER TAB */}
@@ -399,6 +447,38 @@ class ManagerDashboard extends React.Component {
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={3}> {/* ADD MEMBERSHIP INVOICE LISTS TAB */}
           Enter membership invoice lists here.
+          {!this.state.lookupTransactionCompleted ?
+            <div>
+              <Grid item style={{ padding: '10px' }}>
+                <TextField label='Member ID' style={{ padding: '10px' }} id="lookupMemberIdTxt" ></TextField>
+                <Button variant="outlined" onClick={() => this.LookupTransactionById()}>Lookup By ID</Button>
+              </Grid>
+            </div>
+            :
+            <div style={{ display: 'grid' }}>
+              <table border="1" style={{ padding: '10px', alignContent: 'center' }}>
+                <thead>
+                  <tr>
+                    <th>Transaction Type</th>
+                    <th>Transaction Amount</th>
+                    <th>Transaction Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.recentTransactionList != null ? this.state.recentTransactionList.map((transaction, index) =>
+                    <tr>
+                      <th>{transaction.trans_type == "memp" ? "Membership Payment" : transaction.trans_type == "L" ? "Locker Payment" : ""}</th>
+                      <th>${transaction.trans_amount}</th>
+                      <th>{transaction.trans_datetime}</th>
+                    </tr>)
+                    :
+                    <div></div>}
+                </tbody>
+              </table>
+              <Grid item style={{ padding: '10px' }}>
+                <Button variant="outlined" style={{ margin: '10px' }} onClick={() => this.setState({ lookupTransactionCompleted: false })}>Find Another Member's Transactions</Button>
+              </Grid>
+            </div>}
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={4}> {/* ADD EQUIPMENT UTILIZATION TAB */}
           Enter equipment utilization counts here.
@@ -489,6 +569,32 @@ class ManagerDashboard extends React.Component {
             <div>
               <p>{JSON.stringify(this.state.lookupLockerData)}</p>
               <Button onClick={() => this.setState({ lookupLockerInformationComplete: false })} variant="outlined">Lookup New Locker</Button>
+            </div>
+          }
+
+        </TabPanel>
+        <TabPanel value={this.state.tabIndex} index={7}> {/* REPORTING TAB */}
+          View Current Analytics
+          <br /><br /><br />
+          <h3>Transactions over the past <Select defaultValue={7} id="reportingTransactionLineChartDateRange" onChange={this.OnTransactionDateRangeChange}>
+              <MenuItem value={7}>Week</MenuItem>
+              <MenuItem value={30}>Month</MenuItem>
+              <MenuItem value={90}>3 Months</MenuItem>
+              <MenuItem value={182}>6 Months</MenuItem>
+              <MenuItem value={365}>Year</MenuItem>
+            </Select></h3>
+          {this.state.transactionLineChartData != null ?
+            <div style={{ display: 'grid' }}>
+              <LineChart width={600} height={300} data={this.state.transactionLineChartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                <Line type="monotone" dataKey="amount" stroke="#8884d8" />
+                <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+              </LineChart>
+            </div>
+            :
+            <div>
             </div>
           }
 
