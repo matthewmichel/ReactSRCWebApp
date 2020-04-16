@@ -11,7 +11,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { getDynamicStyles } from 'jss';
 import { getDefaultWatermarks } from 'istanbul-lib-report';
 
-
 // IMPORT MATERIAL UI ICONS
 
 function TabPanel(props) {
@@ -576,22 +575,24 @@ class ManagerDashboard extends React.Component {
         <TabPanel value={this.state.tabIndex} index={7}> {/* REPORTING TAB */}
           View Current Analytics
           <br /><br /><br />
-          <h3>Transactions over the past <Select defaultValue={7} id="reportingTransactionLineChartDateRange" onChange={this.OnTransactionDateRangeChange}>
+          {/* <h3>Transactions over the past <Select defaultValue={7} id="reportingTransactionLineChartDateRange" onChange={this.OnTransactionDateRangeChange}>
               <MenuItem value={7}>Week</MenuItem>
               <MenuItem value={30}>Month</MenuItem>
               <MenuItem value={90}>3 Months</MenuItem>
               <MenuItem value={182}>6 Months</MenuItem>
               <MenuItem value={365}>Year</MenuItem>
-            </Select></h3>
+            </Select></h3> */}
           {this.state.transactionLineChartData != null ?
-            <div style={{ display: 'grid' }}>
-              <LineChart width={600} height={300} data={this.state.transactionLineChartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+            <div style={{ display: 'grid', width: '100%' }}>
+              {/* <LineChart width={600} height={300} data={this.state.transactionLineChartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
                 <Line type="monotone" dataKey="amount" stroke="#8884d8" />
                 <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
                 <XAxis dataKey="date" />
                 <YAxis />
                 <Tooltip />
-              </LineChart>
+              </LineChart> */}
+              <iframe width="100%" height="700" src="https://app.powerbi.com/reportEmbed?reportId=ded33484-1c31-4fd4-b93b-3f0f0abb68de&autoAuth=true&ctid=dd246e4a-5434-4e15-8ae3-91ad9797b209&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLXVzLW5vcnRoLWNlbnRyYWwtcmVkaXJlY3QuYW5hbHlzaXMud2luZG93cy5uZXQvIn0%3D" frameborder="0" allowFullScreen="true"></iframe>
+              <iframe width="100%" height="700" src="https://app.powerbi.com/reportEmbed?reportId=01626ad6-9ae0-48d7-b767-fce5c99c01d9&autoAuth=true&ctid=dd246e4a-5434-4e15-8ae3-91ad9797b209&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLXVzLW5vcnRoLWNlbnRyYWwtcmVkaXJlY3QuYW5hbHlzaXMud2luZG93cy5uZXQvIn0%3D" frameborder="0" allowFullScreen="true"></iframe>
             </div>
             :
             <div>

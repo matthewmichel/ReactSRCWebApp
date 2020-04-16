@@ -1,8 +1,9 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { TextField, Paper, Grid, Button, Snackbar, Backdrop, CircularProgress } from '@material-ui/core'
+import { TextField, Paper, Grid, Button, Snackbar, Backdrop, CircularProgress, Box } from '@material-ui/core'
 import axios from 'axios';
+import headerImage from './headerImage.jpg';
 
 // IMPORT CUSTOM REACT COMPONENTS
 import MenuDrawer from './MenuDrawer';
@@ -52,10 +53,10 @@ class App extends React.Component {
           console.log(JSON.stringify(res.data));
           if (res.data.mem_type == 'A') {
             this.setState({ userType: 'member', currentScreen: 'Dashboard', isLoggedIn: true });
-          } else if(res.data.mem_type == 'M') {
+          } else if (res.data.mem_type == 'M') {
             this.setState({ userType: 'manager', currentScreen: 'Dashboard', isLoggedIn: true });
           }
-          else if(res.data.mem_type == 'E') {
+          else if (res.data.mem_type == 'E') {
             this.setState({ userType: 'employee', currentScreen: 'Dashboard', isLoggedIn: true });
           }
           console.log(this.state.userInformation)
@@ -103,9 +104,43 @@ class App extends React.Component {
 
         {this.state.currentScreen == 'Home' ?
           <header className="App-header">
-            <h1 style={{ color: '#AD0000', fontFamily: 'NCAALouisvilleCardinals', fontSize: '7em', marginBottom: '1em' }}>U of L</h1>
-            <h2 style={{ color: '#AD0000' }}>Student Recreation Center</h2>
-            <Button onClick={() => this.setState({ currentScreen: 'Login' })} style={{ fontFamily: 'NCAALouisvilleCardinals', color: '#AD0000', height: '60px', width: '200px', fontSize: '30px' }} variant="outlined" >Log In</Button>
+            <div style={{ position: 'absolute', zIndex: '1', background: 'black', width: '100%', height: 'auto', objectFit: 'contain' }}>
+              <img src={headerImage} style={{ opacity: '0.6', minWidth: '100%', height: '80vh' }} />
+            </div>
+            <div style={{ position: 'relative', zIndex: '2' }}>
+              <p style={{ color: 'white', fontFamily: 'NCAALouisvilleCardinals', fontSize: '60px', marginBottom: '1em', paddingTop: '300px' }}>U of L Student Recreation Center</p>
+              {/* <h2 style={{ color: 'white' }}>Student Recreation Center</h2> */}
+              <Button onClick={() => this.setState({ currentScreen: 'Login' })} style={{ fontFamily: 'NCAALouisvilleCardinals', color: 'white', backgroundColor: '#AD0000', height: '60px', width: '200px', fontSize: '30px', marginBottom: '200px', borderRadius: '50px' }} variant="outlined" >Log In</Button>
+              <Grid container direction="row" justify="center" style={{ top: '30px', marginBottom: '50px' }}>
+                <Grid item>
+                  <Paper elevation={5} style={{ width: '800px', height: '150px', backgroundColor: 'white' }}>
+                    <Grid container direction="row" justify="center" style={{ width: '800px', height: '150px', backgroundColor: 'white' }}>
+                      <Grid item style={{ width: '200px', padding: '15px' }}>
+                        <strong>Our Hours</strong><br /><br />
+                        M-F 8AM - 5PM<br />
+                        Sat 11AM - 7PM<br />
+                        Sun 1PM - 9PM
+                      </Grid>
+                      <Grid item style={{ width: '200px', padding: '15px' }}>
+                      <strong>Intramurals</strong><br /><br />
+                        We offer intramural sports throughout the schoolyear.
+                      </Grid>
+                      <Grid item style={{ width: '200px', padding: '15px' }}>
+                      <strong>Personal Training</strong><br /><br />
+                        Nationally certified personal trainers.
+                      </Grid>
+                      <Grid item style={{ width: '200px', padding: '15px' }}>
+                      <strong>Multiple Facilities</strong><br /><br />
+                        Three U of L Intramural and Recreational Sports Facilities.
+                      </Grid>
+                    </Grid>
+                  </Paper>
+                </Grid>
+              </Grid>
+            </div>
+            <div style={{ position: 'absolute', zIndex: '3', backgroundColor: 'white', width: '100%', height: '15%' }}>
+              <p> </p>
+            </div>
           </header>
           : this.state.currentScreen == 'About' ?
             <div>
