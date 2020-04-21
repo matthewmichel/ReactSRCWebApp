@@ -286,10 +286,30 @@ class ManagerDashboard extends React.Component {
   };
 
   submitUserInformation = () => {
-    axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/inserts/insertmember?type=A&firstname=' + document.getElementById('firstNameTxt').value + '&lastname=' + document.getElementById('lastNameTxt').value + '&streetnumber=' + document.getElementById('streetNumberTxt').value + '&streetname=' + document.getElementById('streetNameTxt').value + '&city=' + document.getElementById('cityTxt').value + '&state=' + document.getElementById('stateTxt').value + '&zip=' + document.getElementById('zipCodeTxt').value + '&value9=' + document.getElementById('phoneTxt').value + '&value10=' + document.getElementById('emailTxt').value + '&value11=' + document.getElementById('emergencyContactNameTxt').value + '&value12=' + document.getElementById('emergencyContactPhoneTxt').value + '&value13=' + document.getElementById('dateOfBirthTxt').value + '&value14=' + document.getElementById('dateOfRegistrationTxt').value + '&value15=A')
-      .then((res) => console.log('submitting new user information successful: ' + JSON.stringify(res)))
-      .catch((err) => console.log(err))
-  }
+    this.setState({ loading: true });
+    axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/inserts/insertmember?type=A&firstname=' + document.getElementById('firstNameTxt').value + '&lastname=' + document.getElementById('lastNameTxt').value + '&streetnumber=' + document.getElementById('streetNumberTxt').value + '&streetname=' + document.getElementById('streetNameTxt').value + '&city=' + document.getElementById('cityTxt').value + '&state=' + document.getElementById('stateTxt').value + '&zip=' + document.getElementById('zipCodeTxt').value + '&phone=' + document.getElementById('phoneTxt').value + '&email=' + document.getElementById('emailTxt').value + '&ecname=' + document.getElementById('emergencyContactNameTxt').value + '&ecnumber=' + document.getElementById('emergencyContactPhoneTxt').value + '&dob=' + document.getElementById('dateOfBirthTxt').value + '&rd=' + document.getElementById('dateOfRegistrationTxt').value)
+      .then((res) => {
+        if(res.data == 290) {
+          document.getElementById('firstNameTxt').value = '';
+          document.getElementById('lastNameTxt').value = '';
+          document.getElementById('streetNumberTxt').value = '';
+          document.getElementById('streetNameTxt').value = '';
+          document.getElementById('cityTxt').value = '';
+          document.getElementById('stateTxt').value = '';
+          document.getElementById('zipCodeTxt').value = '';
+          document.getElementById('phoneTxt').value = '';
+          document.getElementById('emailTxt').value = '';
+          document.getElementById('emergencyContactNameTxt').value = '';
+          document.getElementById('emergencyContactPhoneTxt').value = '';
+          document.getElementById('dateOfBirthTxt').value = '';
+          document.getElementById('dateOfRegistrationTxt').value = '';
+          this.setState({ loading: false })
+        } else {
+          console.log('error inserting new member');
+          this.setState({ loading: false });
+        }
+      })
+    }
 
   sendEmailBlastAllMembers = () => {
     this.setState({ loading: true });
