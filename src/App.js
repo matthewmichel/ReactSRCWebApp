@@ -93,7 +93,9 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App" >
+      <div className="App" style={{ height: '100vh' }}>
+
+        {this.state.currentScreen == 'Login' ? <img src={headerImage} style={{ position: 'static', zIndex: '0', opacity: '0.6', minWidth: '100%', height: '100vh' }}/> : <div></div>}
 
         <Backdrop open={this.state.loading} onClick={() => { }} style={{ zIndex: '100', color: '#fff' }}>
           <CircularProgress />
@@ -115,17 +117,17 @@ class App extends React.Component {
                 <Grid item>
                   <Paper elevation={5} style={{ width: '800px', height: '150px', backgroundColor: 'white' }}>
                     <Grid container direction="row" justify="center" style={{ width: '800px', height: '150px', backgroundColor: 'white' }}>
-                      <Grid item style={{ width: '200px', padding: '15px' }}>
+                      <Grid item style={{ width: '200px', padding: '15px', borderRight: '1px solid gray' }}>
                         <strong>Our Hours</strong><br /><br />
                         M-F 8AM - 5PM<br />
                         Sat 11AM - 7PM<br />
                         Sun 1PM - 9PM
                       </Grid>
-                      <Grid item style={{ width: '200px', padding: '15px' }}>
+                      <Grid item style={{ width: '200px', padding: '15px', borderRight: '1px solid gray' }}>
                       <strong>Intramurals</strong><br /><br />
                         We offer intramural sports throughout the schoolyear.
                       </Grid>
-                      <Grid item style={{ width: '200px', padding: '15px' }}>
+                      <Grid item style={{ width: '200px', padding: '15px', borderRight: '1px solid gray' }}>
                       <strong>Personal Training</strong><br /><br />
                         Nationally certified personal trainers.
                       </Grid>
@@ -155,7 +157,7 @@ The Department of Intramural and Recreational Sports serves to improve the quali
               </header>
             </div>
             : this.state.currentScreen == 'Login' ?
-              <div>
+              <div style={{ zIndex: '1', position: 'relative' }}>
                 <Grid container direction="column" justify="center" style={{ alignContent: "center", alignItems: "center" }}>
                   <Grid item>
                     <h1 style={{ color: '#AD0000', fontFamily: 'NCAALouisvilleCardinals', fontSize: '7em', marginBottom: '1em' }}>Log In</h1>
