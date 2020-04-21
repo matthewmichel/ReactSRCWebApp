@@ -34,3 +34,13 @@
     transform: rotate(360deg);
   }
 }
+body, html {
+  height: 100%;
+  }
+  .bg {
+  background-image: url("https://i.ibb.co/fDkPzmM/Uof-L-Faded.png");
+  height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  }

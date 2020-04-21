@@ -4,6 +4,7 @@ import { TextField, Paper, Grid, Button, AppBar, Tabs, Tab, Typography, Box, Bac
 import axios from 'axios';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 
+
 // IMPORT CUSTOM REACT COMPONENTS
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -29,6 +30,9 @@ function TabPanel(props) {
     </Typography>
   );
 }
+const BackgroundImagePage = () => {
+  return <div className="bg" />;
+};
 
 function a11yProps(index) {
   return {
@@ -334,7 +338,8 @@ class ManagerDashboard extends React.Component {
   render() {
 
     return (
-      <div>
+
+      <div className= "bg">
 
         <Backdrop open={this.state.loading} onClick={() => { }} style={{ zIndex: '100', color: '#fff' }}>
           <CircularProgress />
@@ -355,7 +360,7 @@ class ManagerDashboard extends React.Component {
           </Tabs>
         </AppBar>
         <TabPanel value={this.state.tabIndex} index={0}> {/* ADD MEMBER TAB */}
-          Add New Membership Information Here <br />
+          New members can be added here with their membership information. <br />
           <Paper>
             <Grid container direction="column">
               <Grid item style={{ padding: '10px' }}>
@@ -394,7 +399,7 @@ class ManagerDashboard extends React.Component {
           </Paper>
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={1}> {/* LOOKUP MEMBER TAB */}
-          Look up current members based on various information.
+          Existing members in the system can be looked up here by their Member ID # or the email address they signed up with.
           {!this.state.lookupMemberCompleted ?
             <div>
               <Grid item style={{ padding: '10px' }}>
@@ -454,7 +459,7 @@ class ManagerDashboard extends React.Component {
             </div>}
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={2}> {/* ADD TRANSACTION TAB */}
-          Enter membership payment records here.
+          Payments made by members are recorded here. You must enter the corresponding Member ID # with the amount. Please choose rather it is a locker or membership payment.
           <Grid item style={{ padding: '10px' }}>
             <TextField label='Member ID' style={{ padding: '10px' }} id="transactionMemberIdInput"></TextField>
           </Grid>
@@ -472,7 +477,7 @@ class ManagerDashboard extends React.Component {
           </Grid>
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={3}> {/* ADD MEMBERSHIP INVOICE LISTS TAB */}
-          Enter membership invoice lists here.
+          Enter a current member's Member ID # to view a list of that member's previous transaction history. Once finished, another search can be conduscted by selecting the option at the bottom of the screen.
           {!this.state.lookupTransactionCompleted ?
             <div>
               <Grid item style={{ padding: '10px' }}>
@@ -507,7 +512,7 @@ class ManagerDashboard extends React.Component {
             </div>}
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={4}> {/* ADD EQUIPMENT UTILIZATION TAB */}
-          Enter equipment utilization counts here.
+          Enter the equipment utilization here. Please select the area being counted and the current counts of each cateogry below. Time is recorded automatically.
           <br /><br /><br />
           <Grid><InputLabel>Area</InputLabel>
             <Select defaultValue={'Weight Room'} id="euRoomName">
@@ -558,7 +563,7 @@ class ManagerDashboard extends React.Component {
           </Grid>
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={5}> {/* ADD LOCKER INFORMATION TAB */}
-          Enter Locker information here.
+          Locker rentals can be completed here. Please start by finding the appropriate locker below, then enter the Member ID of the member requesting that locker. Be sure to provide the member their new locker number.
             <Grid item style={{ padding: '10px' }}>
             <TextField id="rentLockerMemberId" label='Member ID' style={{ padding: '10px' }}></TextField>
           </Grid>
@@ -585,7 +590,7 @@ class ManagerDashboard extends React.Component {
           </Grid>
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={6}> {/* LOOKUP LOCKER TAB */}
-          Look up current locker information here.
+          Enter a locker number below to view the current status and information of that locker.
           {!this.state.lookupLockerInformationComplete ?
             <div>
               <TextField id="lookupLockerId" label="Locker ID" />
@@ -601,7 +606,7 @@ class ManagerDashboard extends React.Component {
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={7}> {/* REPORTING TAB */}
 
-          View Current Analytics
+          View current analytics and monthly breakdowns.
           <br /><br /><br />
           {/* <h3>Transactions over the past <Select defaultValue={7} id="reportingTransactionLineChartDateRange" onChange={this.OnTransactionDateRangeChange}>
               <MenuItem value={7}>Week</MenuItem>
@@ -629,7 +634,7 @@ class ManagerDashboard extends React.Component {
 
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={8}> {/* MAILING TAB */}
-          <h2>Send Email Blast</h2>
+          <h2>Send email blasts to all members for upcoming events or alerts</h2>
           <br /><br /><br />
           <TextField label="Subject" variant="outlined" id="emailBlastSubject" /><br /><br />
           <TextField label="Message" variant="outlined" id="emailBlastMessage" multiline rows={5} style={{ width: '600px' }} /><br /><br /><br />
@@ -637,6 +642,8 @@ class ManagerDashboard extends React.Component {
           <p style={{ color: 'red' }} >This action cannot be undone. An email will be sent to every member.</p>
         </TabPanel>
       </div>
+      
+      
     )
   }
 }
