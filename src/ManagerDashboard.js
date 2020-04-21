@@ -340,29 +340,19 @@ class ManagerDashboard extends React.Component {
             <Grid container direction="column">
               <Grid item style={{ padding: '10px' }}>
                 <TextField label='First Name' style={{ padding: '10px' }} id="firstNameTxt"></TextField>
-              </Grid>
-              <Grid item style={{ padding: '10px' }}>
                 <TextField label='Last Name' style={{ padding: '10px' }} id="lastNameTxt"></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
                 <TextField label='Street Number' style={{ padding: '10px' }} id="streetNumberTxt"></TextField>
-              </Grid>
-              <Grid item style={{ padding: '10px' }}>
                 <TextField label='Street Name' style={{ padding: '10px' }} id="streetNameTxt"></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
                 <TextField label='City' style={{ padding: '10px' }} id="cityTxt"></TextField>
-              </Grid>
-              <Grid item style={{ padding: '10px' }}>
                 <TextField label='State' style={{ padding: '10px' }} id="stateTxt"></TextField>
-              </Grid>
-              <Grid item style={{ padding: '10px' }}>
                 <TextField label='Zip Code' style={{ padding: '10px' }} id="zipCodeTxt"></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}>
                 <TextField label='Phone' style={{ padding: '10px' }} id="phoneTxt"></TextField>
-              </Grid>
-              <Grid item style={{ padding: '10px' }}>
                 <TextField label='Email' style={{ padding: '10px' }} id="emailTxt"></TextField>
               </Grid>
               <Grid item style={{ padding: '10px' }}>

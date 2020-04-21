@@ -95,7 +95,7 @@ class App extends React.Component {
     return (
       <div className="App" style={{ height: '100vh' }}>
 
-        {this.state.currentScreen == 'Login' ? <img src={headerImage} style={{ position: 'static', zIndex: '0', opacity: '0.6', minWidth: '100%', height: '100vh' }}/> : <div></div>}
+        {/* this.state.currentScreen == 'Login' ? <img src={headerImage} style={{ position: 'static', zIndex: '0', opacity: '0.6', minWidth: '100%', height: '100vh' }} /> : <div></div> */}
 
         <Backdrop open={this.state.loading} onClick={() => { }} style={{ zIndex: '100', color: '#fff' }}>
           <CircularProgress />
@@ -124,15 +124,15 @@ class App extends React.Component {
                         Sun 1PM - 9PM
                       </Grid>
                       <Grid item style={{ width: '200px', padding: '15px', borderRight: '1px solid gray' }}>
-                      <strong>Intramurals</strong><br /><br />
+                        <strong>Intramurals</strong><br /><br />
                         We offer intramural sports throughout the schoolyear.
                       </Grid>
                       <Grid item style={{ width: '200px', padding: '15px', borderRight: '1px solid gray' }}>
-                      <strong>Personal Training</strong><br /><br />
+                        <strong>Personal Training</strong><br /><br />
                         Nationally certified personal trainers.
                       </Grid>
                       <Grid item style={{ width: '200px', padding: '15px' }}>
-                      <strong>Multiple Facilities</strong><br /><br />
+                        <strong>Multiple Facilities</strong><br /><br />
                         Three U of L Intramural and Recreational Sports Facilities.
                       </Grid>
                     </Grid>
@@ -141,53 +141,69 @@ class App extends React.Component {
               </Grid>
             </div>
             <div style={{ position: 'absolute', zIndex: '3', backgroundColor: 'white', width: '100%', height: '15%' }}>
-              <p> </p>
+              <br /><br /><br /><br />
+              <p style={{ color: 'black' }}>© Kickstart 2020</p>
             </div>
           </header>
           : this.state.currentScreen == 'About' ?
             <div>
               <header className="App-header" >
-                <h1 style={{ color: '#AD0000', fontFamily: 'NCAALouisvilleCardinals', fontSize: '7em', marginBottom: '1em' }}>About</h1>
-                <Grid container justify="center" style={{ textAlign: 'center' }}>
-                  <Grid item>
-                    <p style={{ textAlign: 'center', alignContent: 'center', alignItems: 'center', color: 'black', width: '50%', margin: '0px auto' }}>The Department of Intramural and Recreational Sports’ goal is to improve the quality of life and sense of belonging for all members of the University of Louisville community. Through participation in a variety of sports and fitness activities, participants achieve an improved level of physical, emotional, and social well being within a welcoming environment.
+                <div style={{ position: 'absolute', zIndex: '1', background: 'black', width: '100%', height: 'auto', objectFit: 'contain' }}>
+                  <img src={headerImage} style={{ opacity: '0.4', minWidth: '100%', height: '80vh' }} />
+                </div>
+                <div style={{ position: 'relative', zIndex: '2' }}>
+                  <h1 style={{ color: '#AD0000', fontFamily: 'NCAALouisvilleCardinals', fontSize: '7em', marginBottom: '1em' }}>About</h1>
+                  <Grid container justify="center" style={{ textAlign: 'center' }}>
+                    <Grid item>
+                      <p style={{ textAlign: 'center', alignContent: 'center', alignItems: 'center', color: 'white', width: '50%', margin: '0px auto' }}>The Department of Intramural and Recreational Sports’ goal is to improve the quality of life and sense of belonging for all members of the University of Louisville community. Through participation in a variety of sports and fitness activities, participants achieve an improved level of physical, emotional, and social well being within a welcoming environment.
 The Department of Intramural and Recreational Sports serves to improve the quality of student lives using sports and fitness activities to achieve that goal. Intramural and Recreational Sports encourages students to get involved in some activity that will enable them to develop a healthy lifestyle. Students can choose from a wide variety of activities ranging from fitness classes to competitive Intramural Sports to Sport Clubs. Our motto is “A Sport for Everyone and Everyone in a Sport."</p>
+                    </Grid>
                   </Grid>
-                </Grid>
+                </div>
               </header>
             </div>
             : this.state.currentScreen == 'Login' ?
-              <div style={{ zIndex: '1', position: 'relative' }}>
-                <Grid container direction="column" justify="center" style={{ alignContent: "center", alignItems: "center" }}>
-                  <Grid item>
-                    <h1 style={{ color: '#AD0000', fontFamily: 'NCAALouisvilleCardinals', fontSize: '7em', marginBottom: '1em' }}>Log In</h1>
+              <div>
+                <div>
+                  <img src={headerImage} style={{ position: 'absolute', zIndex: '1', opacity: '0.4', minWidth: '100%', height: '100vh', marginLeft: '-50%' }} />
+                </div>
+                <div style={{ position: 'relative', zIndex: '2' }}>
+                  <Grid container direction="column" justify="center" style={{ alignContent: "center", alignItems: "center" }}>
+                    <Grid item>
+                      <h1 style={{ color: '#AD0000', fontFamily: 'NCAALouisvilleCardinals', fontSize: '7em', marginBottom: '1em' }}>Log In</h1>
+                    </Grid>
+                    <Grid item style={{ textAlign: 'center' }}>
+                      <p>If you are a U of L Student or Employee, use your Student ID and ULink password.</p>
+                      <p>Otherwise, log in with your username and password.</p>
+                    </Grid>
+                    <br />
+                    <Grid item>
+                      <Paper style={{ padding: '2em', borderStyle: 'solid', borderWidth: '1px', width: '300px', paddingBottom: '2em' }}>
+                        <TextField id="usernameInput" placeholder="Username" />
+                        <br /><br /><br />
+                        <TextField id="passwordInput" placeholder="Password" type="password" />
+                        <br /><br /><br />
+                        <Button onClick={() => this.CheckUserCredentials()} style={{ backgroundColor: '#AD0000', color: 'white' }}>Log In</Button>
+                        <br /><br /><br />
+                        <a href="#" target="_blank">I forgot my password.</a>
+                      </Paper>
+                    </Grid>
                   </Grid>
-                  <Grid item style={{ textAlign: 'center' }}>
-                    <p>If you are a U of L Student or Employee, use your Student ID and ULink password.</p>
-                    <p>Otherwise, log in with your username and password.</p>
-                  </Grid>
-                  <br />
-                  <Grid item>
-                    <Paper style={{ padding: '2em', borderStyle: 'solid', borderWidth: '1px', width: '300px', paddingBottom: '2em' }}>
-                      <TextField id="usernameInput" placeholder="Username" />
-                      <br /><br /><br />
-                      <TextField id="passwordInput" placeholder="Password" type="password" />
-                      <br /><br /><br />
-                      <Button onClick={() => this.CheckUserCredentials()} style={{ backgroundColor: '#AD0000', color: 'white' }}>Log In</Button>
-                      <br /><br /><br />
-                      <a href="#" target="_blank">I forgot my password.</a>
-                    </Paper>
-                  </Grid>
-                </Grid>
+                </div>
               </div>
               : this.state.currentScreen == 'Contact' ?
                 <div>
                   <header className="App-header">
-                    <h1 style={{ color: '#AD0000', fontFamily: 'NCAALouisvilleCardinals', fontSize: '7em', marginBottom: '1em' }}>Contact</h1>
-                    <p style={{ color: 'black' }}>Follow the SRC on Social Media</p>
-                    <a href="https://www.facebook.com/UofLIntramurals/" target="_blank"><FacebookLogo fontSize="large" /></a>
-                    <a href="https://twitter.com/ulsrc" target="_blank"><TwitterLogo fontSize="large" /></a>
-                    <a href="https://www.youtube.com/channel/UCTvunrnR1_xbD-oSRkEq1jw" target="_blank"><YouTubeLogo fontSize="large" /></a>
+                    <div style={{ position: 'absolute', zIndex: '1', background: 'black', width: '100%', height: 'auto', objectFit: 'contain' }}>
+                      <img src={headerImage} style={{ opacity: '0.4', minWidth: '100%', height: '80vh' }} />
+                    </div>
+                    <div style={{ position: 'relative', zIndex: '2', color: 'white' }}>
+                      <h1 style={{ color: '#AD0000', fontFamily: 'NCAALouisvilleCardinals', fontSize: '7em', marginBottom: '1em' }}>Contact</h1>
+                      <p style={{ color: 'black' }}>Follow the SRC on Social Media</p>
+                      <a href="https://www.facebook.com/UofLIntramurals/" target="_blank"><FacebookLogo fontSize="large" /></a>
+                      <a href="https://twitter.com/ulsrc" target="_blank"><TwitterLogo fontSize="large" /></a>
+                      <a href="https://www.youtube.com/channel/UCTvunrnR1_xbD-oSRkEq1jw" target="_blank"><YouTubeLogo fontSize="large" /></a>
+                    </div>
                   </header>
                 </div>
                 : this.state.currentScreen == 'Dashboard' ?
