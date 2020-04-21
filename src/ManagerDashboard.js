@@ -291,6 +291,22 @@ class ManagerDashboard extends React.Component {
       .catch((err) => console.log(err))
   }
 
+  sendEmailBlastAllMembers = () => {
+    this.setState({ loading: true });
+    axios.post(`https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/emailblast/emailall?subject=` + document.getElementById('emailBlastSubject').value + `&message=` + document.getElementById('emailBlastMessage').value, {})
+    .then(res => {
+      console.log(res);
+      if(res.data == 290) {
+        document.getElementById('emailBlastSubject').value = '';
+        document.getElementById('emailBlastMessage').value = '';
+        this.setState({ loading: false });
+      } else {
+        this.setState({ loading: false });
+        console.log('error sending email blast.');
+      }
+    })
+  }
+
   // CALLBACK FUNCTIONS
 
   // RENDER COMPONENT
@@ -315,6 +331,7 @@ class ManagerDashboard extends React.Component {
             <Tab label="Locker Entry" {...a11yProps(5)} />
             <Tab label="Locker Lookup" {...a11yProps(6)} />
             <Tab label="Reporting" {...a11yProps(7)} />
+            <Tab label="Email Blast" {...a11yProps(8)} />
           </Tabs>
         </AppBar>
         <TabPanel value={this.state.tabIndex} index={0}> {/* ADD MEMBER TAB */}
@@ -573,6 +590,7 @@ class ManagerDashboard extends React.Component {
 
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={7}> {/* REPORTING TAB */}
+
           View Current Analytics
           <br /><br /><br />
           {/* <h3>Transactions over the past <Select defaultValue={7} id="reportingTransactionLineChartDateRange" onChange={this.OnTransactionDateRangeChange}>
@@ -599,6 +617,14 @@ class ManagerDashboard extends React.Component {
             </div>
           }
 
+        </TabPanel>
+        <TabPanel value={this.state.tabIndex} index={8}> {/* MAILING TAB */}
+          <h2>Send Email Blast</h2>
+          <br /><br /><br />
+          <TextField label="Subject" variant="outlined" id="emailBlastSubject" /><br /><br />
+          <TextField label="Message" variant="outlined" id="emailBlastMessage" multiline rows={5} style={{ width: '600px' }} /><br /><br /><br />
+          <Button onClick={() => {this.sendEmailBlastAllMembers()}} variant="outlined">Send Email</Button><br /><br />
+          <p style={{ color: 'red' }} >This action cannot be undone. An email will be sent to every member.</p>
         </TabPanel>
       </div>
     )
