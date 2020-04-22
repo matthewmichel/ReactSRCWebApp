@@ -477,7 +477,7 @@ class ManagerDashboard extends React.Component {
           </Grid>
         </TabPanel>
         <TabPanel value={this.state.tabIndex} index={3}> {/* ADD MEMBERSHIP INVOICE LISTS TAB */}
-          Enter a current member's Member ID # to view a list of that member's previous transaction history. Once finished, another search can be conduscted by selecting the option at the bottom of the screen.
+          Enter a current member's Member ID # to view a list of that member's previous transaction history. Once finished, another search can be conducted by selecting the option at the bottom of the screen.
           {!this.state.lookupTransactionCompleted ?
             <div>
               <Grid item style={{ padding: '10px' }}>
