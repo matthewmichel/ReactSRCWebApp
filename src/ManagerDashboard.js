@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { TextField, Paper, Grid, Button, AppBar, Tabs, Tab, Typography, Box, Backdrop, CircularProgress } from '@material-ui/core'
+import { TextField, Paper, Grid, Button, AppBar, Tabs, Tab, Typography, Box, Backdrop, CircularProgress, FormControl } from '@material-ui/core'
 import axios from 'axios';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 
@@ -56,6 +56,7 @@ class ManagerDashboard extends React.Component {
       lookupTransactionCompleted: false,
       recentTransactionList: null,
       transactionLineChartData: null,
+      memberType: 'A',
     };
   }
 
@@ -234,7 +235,7 @@ class ManagerDashboard extends React.Component {
       .then(res => {
         if (res.data != 590) {
           var dataArray = res.data;
-          for(var i = 0; i < dataArray.length; i++) {
+          for (var i = 0; i < dataArray.length; i++) {
             dataArray[i].date = this.sqlToJsDate(dataArray[i].date)
           }
           this.setState({ transactionLineChartData: dataArray });
@@ -285,15 +286,19 @@ class ManagerDashboard extends React.Component {
 
   }
 
+  handleMemberTypeChange = (event) => {
+    this.setState({ memberType: event.target.value });
+  }
+
   handleChange = (event, newValue) => {
     this.setState({ tabIndex: newValue });
   };
 
   submitUserInformation = () => {
     this.setState({ loading: true });
-    axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/inserts/insertmember?type=' + document.getElementById('typeTxt').value + '&firstname=' + document.getElementById('firstNameTxt').value + '&lastname=' + document.getElementById('lastNameTxt').value + '&streetnumber=' + document.getElementById('streetNumberTxt').value + '&streetname=' + document.getElementById('streetNameTxt').value + '&city=' + document.getElementById('cityTxt').value + '&state=' + document.getElementById('stateTxt').value + '&zip=' + document.getElementById('zipCodeTxt').value + '&phone=' + document.getElementById('phoneTxt').value + '&email=' + document.getElementById('emailTxt').value + '&ecname=' + document.getElementById('emergencyContactNameTxt').value + '&ecnumber=' + document.getElementById('emergencyContactPhoneTxt').value + '&dob=' + document.getElementById('dateOfBirthTxt').value + '&rd=' + document.getElementById('dateOfRegistrationTxt').value)
+    axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/inserts/insertmember?type=' + this.state.memberType + '&firstname=' + document.getElementById('firstNameTxt').value + '&lastname=' + document.getElementById('lastNameTxt').value + '&streetnumber=' + document.getElementById('streetNumberTxt').value + '&streetname=' + document.getElementById('streetNameTxt').value + '&city=' + document.getElementById('cityTxt').value + '&state=' + document.getElementById('stateTxt').value + '&zip=' + document.getElementById('zipCodeTxt').value + '&phone=' + document.getElementById('phoneTxt').value + '&email=' + document.getElementById('emailTxt').value + '&ecname=' + document.getElementById('emergencyContactNameTxt').value + '&ecnumber=' + document.getElementById('emergencyContactPhoneTxt').value + '&dob=' + document.getElementById('dateOfBirthTxt').value + '&rd=' + document.getElementById('dateOfRegistrationTxt').value)
       .then((res) => {
-        if(res.data == 290) {
+        if (res.data == 290) {
           document.getElementById('typeTxt').value = '';
           document.getElementById('firstNameTxt').value = '';
           document.getElementById('lastNameTxt').value = '';
@@ -311,25 +316,26 @@ class ManagerDashboard extends React.Component {
           this.setState({ loading: false })
         } else {
           console.log('error inserting new member');
+          console.log(res)
           this.setState({ loading: false });
         }
       })
-    }
+  }
 
   sendEmailBlastAllMembers = () => {
     this.setState({ loading: true });
     axios.post(`https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/emailblast/emailall?subject=` + document.getElementById('emailBlastSubject').value + `&message=` + document.getElementById('emailBlastMessage').value, {})
-    .then(res => {
-      console.log(res);
-      if(res.data == 290) {
-        document.getElementById('emailBlastSubject').value = '';
-        document.getElementById('emailBlastMessage').value = '';
-        this.setState({ loading: false });
-      } else {
-        this.setState({ loading: false });
-        console.log('error sending email blast.');
-      }
-    })
+      .then(res => {
+        console.log(res);
+        if (res.data == 290) {
+          document.getElementById('emailBlastSubject').value = '';
+          document.getElementById('emailBlastMessage').value = '';
+          this.setState({ loading: false });
+        } else {
+          this.setState({ loading: false });
+          console.log('error sending email blast.');
+        }
+      })
   }
 
   // CALLBACK FUNCTIONS
@@ -340,7 +346,7 @@ class ManagerDashboard extends React.Component {
 
     return (
 
-      <div className= "bg">
+      <div className="bg">
 
         <Backdrop open={this.state.loading} onClick={() => { }} style={{ zIndex: '100', color: '#fff' }}>
           <CircularProgress />
@@ -369,13 +375,16 @@ class ManagerDashboard extends React.Component {
                 <TextField label='Last Name' style={{ padding: '10px' }} id="lastNameTxt"></TextField>
               </Grid>
               <Grid><InputLabel>Membership Type</InputLabel>
-            <Select defaultValue={'A'} id="typeTxt">
-              <MenuItem value={'A'}>Alumni</MenuItem>
-              <MenuItem value={'S'}>Student</MenuItem>
-              <MenuItem value={'F'}>Faculty</MenuItem>
-              <MenuItem value={'E'}>Employee</MenuItem>
-              <MenuItem value={'M'}>Manager</MenuItem>
-            </Select></Grid>
+                <FormControl>
+                  <Select defaultValue={'A'} onChange={this.handleMemberTypeChange} value={this.state.memberType} id="typeTxt">
+                    <MenuItem value={'A'}>Alumni</MenuItem>
+                    <MenuItem value={'S'}>Student</MenuItem>
+                    <MenuItem value={'F'}>Faculty</MenuItem>
+                    <MenuItem value={'E'}>Employee</MenuItem>
+                    <MenuItem value={'M'}>Manager</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
               <Grid item style={{ padding: '10px' }}>
                 <TextField label='Street Number' style={{ padding: '10px' }} id="streetNumberTxt"></TextField>
                 <TextField label='Street Name' style={{ padding: '10px' }} id="streetNameTxt"></TextField>
@@ -647,12 +656,12 @@ class ManagerDashboard extends React.Component {
           <br /><br /><br />
           <TextField label="Subject" variant="outlined" id="emailBlastSubject" /><br /><br />
           <TextField label="Message" variant="outlined" id="emailBlastMessage" multiline rows={5} style={{ width: '600px' }} /><br /><br /><br />
-          <Button onClick={() => {this.sendEmailBlastAllMembers()}} variant="outlined">Send Email</Button><br /><br />
+          <Button onClick={() => { this.sendEmailBlastAllMembers() }} variant="outlined">Send Email</Button><br /><br />
           <p style={{ color: 'red' }} >This action cannot be undone. An email will be sent to every member.</p>
         </TabPanel>
       </div>
-      
-      
+
+
     )
   }
 }
