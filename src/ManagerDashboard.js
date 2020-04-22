@@ -291,9 +291,10 @@ class ManagerDashboard extends React.Component {
 
   submitUserInformation = () => {
     this.setState({ loading: true });
-    axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/inserts/insertmember?type=A&firstname=' + document.getElementById('firstNameTxt').value + '&lastname=' + document.getElementById('lastNameTxt').value + '&streetnumber=' + document.getElementById('streetNumberTxt').value + '&streetname=' + document.getElementById('streetNameTxt').value + '&city=' + document.getElementById('cityTxt').value + '&state=' + document.getElementById('stateTxt').value + '&zip=' + document.getElementById('zipCodeTxt').value + '&phone=' + document.getElementById('phoneTxt').value + '&email=' + document.getElementById('emailTxt').value + '&ecname=' + document.getElementById('emergencyContactNameTxt').value + '&ecnumber=' + document.getElementById('emergencyContactPhoneTxt').value + '&dob=' + document.getElementById('dateOfBirthTxt').value + '&rd=' + document.getElementById('dateOfRegistrationTxt').value)
+    axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/inserts/insertmember?type=' + document.getElementById('typeTxt').value + '&firstname=' + document.getElementById('firstNameTxt').value + '&lastname=' + document.getElementById('lastNameTxt').value + '&streetnumber=' + document.getElementById('streetNumberTxt').value + '&streetname=' + document.getElementById('streetNameTxt').value + '&city=' + document.getElementById('cityTxt').value + '&state=' + document.getElementById('stateTxt').value + '&zip=' + document.getElementById('zipCodeTxt').value + '&phone=' + document.getElementById('phoneTxt').value + '&email=' + document.getElementById('emailTxt').value + '&ecname=' + document.getElementById('emergencyContactNameTxt').value + '&ecnumber=' + document.getElementById('emergencyContactPhoneTxt').value + '&dob=' + document.getElementById('dateOfBirthTxt').value + '&rd=' + document.getElementById('dateOfRegistrationTxt').value)
       .then((res) => {
         if(res.data == 290) {
+          document.getElementById('typeTxt').value = '';
           document.getElementById('firstNameTxt').value = '';
           document.getElementById('lastNameTxt').value = '';
           document.getElementById('streetNumberTxt').value = '';
@@ -367,6 +368,14 @@ class ManagerDashboard extends React.Component {
                 <TextField label='First Name' style={{ padding: '10px' }} id="firstNameTxt"></TextField>
                 <TextField label='Last Name' style={{ padding: '10px' }} id="lastNameTxt"></TextField>
               </Grid>
+              <Grid><InputLabel>Membership Type</InputLabel>
+            <Select defaultValue={'A'} id="typeTxt">
+              <MenuItem value={'A'}>Alumni</MenuItem>
+              <MenuItem value={'S'}>Student</MenuItem>
+              <MenuItem value={'F'}>Faculty</MenuItem>
+              <MenuItem value={'E'}>Employee</MenuItem>
+              <MenuItem value={'M'}>Manager</MenuItem>
+            </Select></Grid>
               <Grid item style={{ padding: '10px' }}>
                 <TextField label='Street Number' style={{ padding: '10px' }} id="streetNumberTxt"></TextField>
                 <TextField label='Street Name' style={{ padding: '10px' }} id="streetNameTxt"></TextField>
