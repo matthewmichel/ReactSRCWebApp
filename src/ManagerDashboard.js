@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
-import { TextField, Paper, Grid, Button, AppBar, Tabs, Tab, Typography, Box, Backdrop, CircularProgress, FormControl } from '@material-ui/core'
+import { TextField, Paper, Grid, Button, AppBar, Tabs, Tab, Typography, Box, Backdrop, CircularProgress, FormControl, Snackbar } from '@material-ui/core'
+import MuiAlert from '@material-ui/lab/Alert';
 import axios from 'axios';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 
@@ -57,6 +58,9 @@ class ManagerDashboard extends React.Component {
       recentTransactionList: null,
       transactionLineChartData: null,
       memberType: 'A',
+      snackbarSeverity: 'success',
+      snackbarMessage: '',
+      snackbarOpen: false,
     };
   }
 
@@ -67,6 +71,7 @@ class ManagerDashboard extends React.Component {
     axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/inserts/inserttransaction?eid=' + this.props.userInformation.mem_id + '&type=' + (document.getElementById('transactionTypeInput').textContent == "Membership" ? "memp" : document.getElementById('transactionTypeInput').textContent == "Locker" ? "L" : "") + '&amount=' + document.getElementById('transactionAmountInput').value + '&mid=' + document.getElementById('transactionMemberIdInput').value, {})
       .then(res => {
         if (res.data == 290) {
+          this.OpenSnackbar('success', 'Transaction added successfully.')
           console.log('successful payment insertion');
           document.getElementById('transactionMemberIdInput').value = '';
           document.getElementById('transactionAmountInput').value = '';
@@ -74,6 +79,7 @@ class ManagerDashboard extends React.Component {
           this.setState({ loading: false });
         } else {
           console.log('error inserting payment');
+          this.OpenSnackbar('error', 'Error submitting transaction.')
           console.log(res)
           this.setState({ loading: false });
         }
@@ -87,6 +93,7 @@ class ManagerDashboard extends React.Component {
         console.log(res);
         if (res.data == 290) {
           console.log('successful equipment utilization insert');
+          this.OpenSnackbar('success', 'Equipment utilization added successfully.')
           document.getElementById('euMale').value = 0;
           document.getElementById('euFemale').value = 0;
           document.getElementById('euCaucasian').value = 0;
@@ -95,6 +102,7 @@ class ManagerDashboard extends React.Component {
           this.setState({ loading: false });
         } else {
           console.log('error inserting equipment utilization');
+          this.OpenSnackbar('error', 'Error submitting equipment utilization. Please try again.')
           console.log(res)
           this.setState({ loading: false });
         }
@@ -106,10 +114,12 @@ class ManagerDashboard extends React.Component {
     axios.get('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/reporting/getuserinformationbyuserid?memid=' + document.getElementById('lookupMemberIdTxt').value, {})
       .then(res => {
         if (res.data != 590) {
+          this.OpenSnackbar('success', 'Member found.');
           this.setState({ lookupMemberData: res.data, lookupMemberCompleted: true });
           this.setState({ loading: false });
         } else {
           console.log('error retrieving member information');
+          this.OpenSnackbar('error', 'Error retrieving member information.');
           console.log(res);
           this.setState({ loading: false });
         }
@@ -121,10 +131,12 @@ class ManagerDashboard extends React.Component {
     axios.get('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/reporting/getuserinformationbyemail?mememail=' + document.getElementById('lookupMemberEmailTxt').value, {})
       .then(res => {
         if (res.data != 590) {
+          this.OpenSnackbar('success', 'Member found.');
           this.setState({ lookupMemberData: res.data, lookupMemberCompleted: true });
           this.setState({ loading: false });
         } else {
           console.log('error retrieving member information');
+          this.OpenSnackbar('error', 'Error retrieving member information.');
           console.log(res);
           this.setState({ loading: false });
         }
@@ -136,10 +148,12 @@ class ManagerDashboard extends React.Component {
     axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/updates/updatemember?fname=' + document.getElementById('firstNameTxt').value + '&lname=' + document.getElementById('lastNameTxt').value + '&streetnum=' + document.getElementById('streetNumberTxt').value + '&streetname=' + document.getElementById('streetNameTxt').value + '&city=' + document.getElementById('cityTxt').value + '&state=' + document.getElementById('stateTxt').value + '&zip=' + document.getElementById('zipCodeTxt').value + '&phone=' + document.getElementById('phoneTxt').value + '&email=' + document.getElementById('emailTxt').value + '&econtact=' + document.getElementById('emergencyContactNameTxt').value + '&ephone=' + document.getElementById('emergencyContactPhoneTxt').value + '&dob=' + document.getElementById('dateOfBirthTxt').value + '&mid=' + this.state.lookupMemberData.mem_id)
       .then((res) => {
         if (res.data == 290) {
+          this.OpenSnackbar('success', 'Member information updated.')
           console.log('successfully updated member information.')
           this.setState({ loading: false });
         } else {
           console.log('could not update member information')
+          this.OpenSnackbar('error', 'Error updating member information.')
           console.log(res)
           this.setState({ loading: false });
         }
@@ -152,10 +166,12 @@ class ManagerDashboard extends React.Component {
       .then(res => {
         if (res.data != 590) {
           console.log(res.data);
+          this.OpenSnackbar('success', 'Transaction(s) retrieved.');
           this.setState({ recentTransactionList: res.data, lookupTransactionCompleted: true });
           this.setState({ loading: false });
         } else {
           console.log('error retrieving member information');
+          this.OpenSnackbar('error', 'Error retrieving transaction(s).')
           console.log(res);
           this.setState({ loading: false });
         }
@@ -203,10 +219,12 @@ class ManagerDashboard extends React.Component {
     axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/inserts/rentlocker?mid=' + document.getElementById('rentLockerMemberId').value + '&eid=' + this.props.userInformation.mem_id + '&lid=' + this.state.availableLockerID + '&lamount=20', {})
       .then(res => {
         if (res.data == 290) {
+          this.OpenSnackbar('success', 'Locker rented successfully.')
           console.log('successfully rented locker.');
           this.setState({ loading: false });
         } else {
           console.log('error renting locker')
+          this.OpenSnackbar('error', 'Error renting locker.')
           console.log(res)
           this.setState({ loading: false });
         }
@@ -218,11 +236,13 @@ class ManagerDashboard extends React.Component {
     axios.get('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/getlockerinformationbyid?lockid=' + document.getElementById('lookupLockerId').value, {})
       .then(res => {
         if (res.data != 590) {
+          this.OpenSnackbar('success', 'Locker information retrieved.')
           this.setState({ lookupLockerData: res.data, lookupLockerInformationComplete: true });
           this.setState({ loading: false });
           console.log(res.data)
         } else {
           console.log('could not retrieve locker information')
+          this.OpenSnackbar('error', 'Error retrieving locker information.')
           console.log(res.data)
           this.setState({ loading: false });
         }
@@ -294,11 +314,23 @@ class ManagerDashboard extends React.Component {
     this.setState({ tabIndex: newValue });
   };
 
+  OpenSnackbar = (severity, message) => {
+    this.setState({ snackbarMessage: message, snackbarSeverity: severity, snackbarOpen: true });
+  }
+
+  HandleSnackbarClose = (event, reason) => {
+    if(reason === 'clickaway') {
+      return
+    }
+    this.setState({ snackbarOpen: false });
+  }
+
   submitUserInformation = () => {
     this.setState({ loading: true });
     axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/inserts/insertmember?type=' + this.state.memberType + '&firstname=' + document.getElementById('firstNameTxt').value + '&lastname=' + document.getElementById('lastNameTxt').value + '&streetnumber=' + document.getElementById('streetNumberTxt').value + '&streetname=' + document.getElementById('streetNameTxt').value + '&city=' + document.getElementById('cityTxt').value + '&state=' + document.getElementById('stateTxt').value + '&zip=' + document.getElementById('zipCodeTxt').value + '&phone=' + document.getElementById('phoneTxt').value + '&email=' + document.getElementById('emailTxt').value + '&ecname=' + document.getElementById('emergencyContactNameTxt').value + '&ecnumber=' + document.getElementById('emergencyContactPhoneTxt').value + '&dob=' + document.getElementById('dateOfBirthTxt').value + '&rd=' + document.getElementById('dateOfRegistrationTxt').value)
       .then((res) => {
         if (res.data == 290) {
+          this.OpenSnackbar('success', 'Updated member information.')
           document.getElementById('typeTxt').value = '';
           document.getElementById('firstNameTxt').value = '';
           document.getElementById('lastNameTxt').value = '';
@@ -316,6 +348,7 @@ class ManagerDashboard extends React.Component {
           this.setState({ loading: false })
         } else {
           console.log('error inserting new member');
+          this.OpenSnackbar('error', 'Error updating member information.')
           console.log(res)
           this.setState({ loading: false });
         }
@@ -328,21 +361,25 @@ class ManagerDashboard extends React.Component {
       .then(res => {
         console.log(res);
         if (res.data == 290) {
+          this.OpenSnackbar('success', 'Email sent successfully.')
           document.getElementById('emailBlastSubject').value = '';
           document.getElementById('emailBlastMessage').value = '';
           this.setState({ loading: false });
         } else {
           this.setState({ loading: false });
+          this.OpenSnackbar('error', 'Error sending email.')
           console.log('error sending email blast.');
         }
       })
   }
 
-  // CALLBACK FUNCTIONS
-
   // RENDER COMPONENT
 
   render() {
+
+    function Alert(props) {
+      return <MuiAlert elevation={6} variant="filled" {...props} />;
+    }
 
     return (
 
@@ -351,6 +388,12 @@ class ManagerDashboard extends React.Component {
         <Backdrop open={this.state.loading} onClick={() => { }} style={{ zIndex: '100', color: '#fff' }}>
           <CircularProgress />
         </Backdrop>
+
+        <Snackbar open={this.state.snackbarOpen} autoHideDuration={5000} onClose={this.HandleSnackbarClose}>
+          <Alert onClose={this.HandleSnackbarClose} severity={this.state.snackbarSeverity}>
+            {this.state.snackbarMessage}
+          </Alert>
+        </Snackbar>
 
         <h1 style={{ color: 'black', paddingTop: '100px' }}>Hello, {this.props.userInformation.mem_fname}.</h1>
         <AppBar position="static" style={{ backgroundColor: 'black' }}>

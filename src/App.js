@@ -2,6 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { TextField, Paper, Grid, Button, Snackbar, Backdrop, CircularProgress, Box } from '@material-ui/core'
+import MuiAlert from '@material-ui/lab/Alert';
 import axios from 'axios';
 import headerImage from './headerImage.jpg';
 
@@ -32,6 +33,9 @@ class App extends React.Component {
       loading: false,
       resetPasswordMemId: null,
       forgotPasswordScreen: false,
+      snackbarSeverity: 'success',
+      snackbarMessage: '',
+      snackbarOpen: false,
     };
 
     this.ChangeCurrentScreenState = this.ChangeCurrentScreenState.bind(this);
@@ -45,19 +49,24 @@ class App extends React.Component {
         if (res.data == 490) {
           // WRONG USERNAME/PASSWORD
           console.log('invalid username/password');
+          this.OpenSnackbar('failure', 'Wrong Username or Password.')
+          document.getElementById('passwordInput').value = '';
           this.setState({ loading: false });
         } else if (res.data == 590) {
           // ISSUE OCCURRED ON SERVER
           console.log('issue occurred on server');
+          this.OpenSnackbar('failure', 'Network Error. Please try again.')
           this.setState({ loading: false });
         } else {
           this.setState({ userInformation: res.data });
           console.log(JSON.stringify(res.data));
           console.log(res.data.initialPasswordReset)
           if (res.data.initialPasswordReset == 0) {
+            this.OpenSnackbar('warning', 'Please reset your password to login.')
             this.setState({ currentScreen: 'ResetPassword', resetPasswordMemId: res.data.mem_id });
             this.setState({ loading: false });
           } else {
+            this.OpenSnackbar('success', 'Login successful.')
             if (res.data.mem_type == 'A') {
               this.setState({ userType: 'member', currentScreen: 'Dashboard', isLoggedIn: true });
             } else if (res.data.mem_type == 'M') {
@@ -98,6 +107,17 @@ class App extends React.Component {
     this.setState({ username: username });
   }
 
+  OpenSnackbar = (severity, message) => {
+    this.setState({ snackbarMessage: message, snackbarSeverity: severity, snackbarOpen: true });
+  }
+
+  HandleSnackbarClose = (event, reason) => {
+    if(reason === 'clickaway') {
+      return
+    }
+    this.setState({ snackbarOpen: false });
+  }
+
   // CALLBACK FUNCTIONS
 
   ChangeCurrentScreenState(screenName) {
@@ -112,7 +132,10 @@ class App extends React.Component {
         .then(res => {
           if (res.data = 290) {
             console.log('successful reset.')
+            this.OpenSnackbar('success', 'Password Reset Successfully.');
             this.setState({ currentScreen: 'Login', loading: false })
+          } else {
+            this.OpenSnackbar('error', 'Error Resetting Password. Try Again.');
           }
         })
     }
@@ -123,15 +146,25 @@ class App extends React.Component {
     if (document.getElementById('forgotPasswordEmailTxt').value != '') {
       axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/user/forgotpassword?email=' + document.getElementById('forgotPasswordEmailTxt').value, {})
         .then(res => {
+          console.log(res);
           if (res.data == 290) {
             console.log('forgot password complete')
+            this.OpenSnackbar('success', 'Password Reset Email Sent.');
             this.setState({ loading: false, forgotPasswordScreen: false });
+          } else if(res.data == 590) {
+            this.setState({ loading: false });
+            this.OpenSnackbar('error', 'Error Sending Password Reset Email. Try Again.');
           }
         })
     }
   }
 
   render() {
+
+    function Alert(props) {
+      return <MuiAlert elevation={6} variant="filled" {...props} />;
+    }
+
     return (
       <div className="App" style={{ height: '100vh' }}>
 
@@ -140,6 +173,12 @@ class App extends React.Component {
         <Backdrop open={this.state.loading} onClick={() => { }} style={{ zIndex: '100', color: '#fff' }}>
           <CircularProgress />
         </Backdrop>
+
+        <Snackbar open={this.state.snackbarOpen} autoHideDuration={5000} onClose={this.HandleSnackbarClose}>
+          <Alert onClose={this.HandleSnackbarClose} severity={this.state.snackbarSeverity}>
+            {this.state.snackbarMessage}
+          </Alert>
+        </Snackbar>
 
 
         <MenuDrawer changeCurrentScreenState={this.ChangeCurrentScreenState} isLoggedIn={this.state.isLoggedIn} />
