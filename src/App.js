@@ -31,6 +31,7 @@ class App extends React.Component {
       userInformation: null,
       loading: false,
       resetPasswordMemId: null,
+      forgotPasswordScreen: false,
     };
 
     this.ChangeCurrentScreenState = this.ChangeCurrentScreenState.bind(this);
@@ -106,14 +107,27 @@ class App extends React.Component {
 
   ResetPassword = () => {
     this.setState({ loading: true })
-    if(document.getElementById('passwordResetFirstTxt').value == document.getElementById('passwordResetSecondTxt').value) {
+    if (document.getElementById('passwordResetFirstTxt').value == document.getElementById('passwordResetSecondTxt').value) {
       axios.post(encodeURI('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/user/resetpassword?newpd=' + document.getElementById('passwordResetFirstTxt').value + '&mid=' + this.state.resetPasswordMemId), {})
-      .then(res => {
-        if(res.data = 290) {
-          console.log('successful reset.')
-          this.setState({ currentScreen: 'Login', loading: false })
-        }
-      })
+        .then(res => {
+          if (res.data = 290) {
+            console.log('successful reset.')
+            this.setState({ currentScreen: 'Login', loading: false })
+          }
+        })
+    }
+  }
+
+  ForgotPassword = () => {
+    this.setState({ loading: true });
+    if (document.getElementById('forgotPasswordEmailTxt').value != '') {
+      axios.post('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/user/forgotpassword?email=' + document.getElementById('forgotPasswordEmailTxt').value, {})
+        .then(res => {
+          if (res.data == 290) {
+            console.log('forgot password complete')
+            this.setState({ loading: false, forgotPasswordScreen: false });
+          }
+        })
     }
   }
 
@@ -193,29 +207,52 @@ The Department of Intramural and Recreational Sports serves to improve the quali
                 <div>
                   <img src={headerImage} style={{ position: 'absolute', zIndex: '1', opacity: '0.4', minWidth: '100%', height: '100vh', marginLeft: '-50%' }} />
                 </div>
-                <div style={{ position: 'relative', zIndex: '2' }}>
-                  <Grid container direction="column" justify="center" style={{ alignContent: "center", alignItems: "center" }}>
-                    <Grid item>
-                      <h1 style={{ color: '#AD0000', fontFamily: 'NCAALouisvilleCardinals', fontSize: '7em', marginBottom: '1em' }}>Log In</h1>
+                {!this.state.forgotPasswordScreen ?
+                  <div style={{ position: 'relative', zIndex: '2' }}>
+                    <Grid container direction="column" justify="center" style={{ alignContent: "center", alignItems: "center" }}>
+                      <Grid item>
+                        <h1 style={{ color: '#AD0000', fontFamily: 'NCAALouisvilleCardinals', fontSize: '7em', marginBottom: '1em' }}>Log In</h1>
+                      </Grid>
+                      <Grid item style={{ textAlign: 'center' }}>
+                        <p>If you are a U of L Student or Employee, use your Student ID and ULink password.</p>
+                        <p>Otherwise, log in with your username and password.</p>
+                      </Grid>
+                      <br />
+                      <Grid item>
+                        <Paper style={{ padding: '2em', borderStyle: 'solid', borderWidth: '1px', width: '300px', paddingBottom: '2em' }}>
+                          <TextField id="usernameInput" placeholder="Username" />
+                          <br /><br /><br />
+                          <TextField id="passwordInput" placeholder="Password" type="password" />
+                          <br /><br /><br />
+                          <Button onClick={() => this.CheckUserCredentials()} style={{ backgroundColor: '#AD0000', color: 'white' }}>Log In</Button>
+                          <br /><br /><br />
+                          <Button onClick={() => this.setState({ forgotPasswordScreen: true })}>Forgot My Password</Button>
+                        </Paper>
+                      </Grid>
                     </Grid>
-                    <Grid item style={{ textAlign: 'center' }}>
-                      <p>If you are a U of L Student or Employee, use your Student ID and ULink password.</p>
-                      <p>Otherwise, log in with your username and password.</p>
+                  </div>
+                  :
+                  <div style={{ position: 'relative', zIndex: '2' }}>
+                    <Grid container direction="column" justify="center" style={{ alignContent: "center", alignItems: "center" }}>
+                      <Grid item>
+                        <h3 style={{ color: '#AD0000', fontFamily: 'NCAALouisvilleCardinals', fontSize: '3em', marginBottom: '1em', marginTop: '3em' }}>Forgot My Password</h3>
+                      </Grid>
+                      <Grid item style={{ textAlign: 'center' }}>
+                        <p>Please enter your email to reset your password.</p>
+                      </Grid>
+                      <br />
+                      <Grid item>
+                        <Paper style={{ padding: '2em', borderStyle: 'solid', borderWidth: '1px', width: '300px', paddingBottom: '2em' }}>
+                          <TextField id="forgotPasswordEmailTxt" placeholder="Email" />
+                          <br /><br /><br />
+                          <Button onClick={() => this.ForgotPassword()} style={{ backgroundColor: '#AD0000', color: 'white' }}>Reset Password</Button>
+                          <br /><br /><br />
+                          <Button onClick={() => this.setState({ forgotPasswordScreen: false })}>Return to Login</Button>
+                        </Paper>
+                      </Grid>
                     </Grid>
-                    <br />
-                    <Grid item>
-                      <Paper style={{ padding: '2em', borderStyle: 'solid', borderWidth: '1px', width: '300px', paddingBottom: '2em' }}>
-                        <TextField id="usernameInput" placeholder="Username" />
-                        <br /><br /><br />
-                        <TextField id="passwordInput" placeholder="Password" type="password" />
-                        <br /><br /><br />
-                        <Button onClick={() => this.CheckUserCredentials()} style={{ backgroundColor: '#AD0000', color: 'white' }}>Log In</Button>
-                        <br /><br /><br />
-                        <a href="#" target="_blank">I forgot my password.</a>
-                      </Paper>
-                    </Grid>
-                  </Grid>
-                </div>
+                  </div>
+                }
               </div>
               : this.state.currentScreen == 'Contact' ?
                 <div>
