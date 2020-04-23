@@ -41,6 +41,7 @@ class MemberDashboard extends React.Component {
       tabIndex: 0,
       loading: false,
       recentTransactionList: null,
+      lockerList: null,
     };
   }
 
@@ -56,6 +57,20 @@ class MemberDashboard extends React.Component {
         this.setState({ loading: false });
       }
     })
+
+    axios.get('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/user/getlockerbyuserid?memid=' + this.props.userInformation.mem_id, {})
+    .then(res => {
+      if(res.data == 590) {
+        this.setState({ loading: false });
+        console.log(res)
+        console.log('could not retrieve locker information.')
+      } else {
+        console.log(res)
+        this.setState({ lockerList: res.data });
+        this.setState({ loading: false });
+      }
+    })
+
   }
 
   // FUNCTIONS
@@ -85,6 +100,7 @@ class MemberDashboard extends React.Component {
           <Tabs value={this.state.tabIndex} onChange={this.handleChange} aria-label="member dashboard tabs" variant="scrollable">
             <Tab label="Your Information" {...a11yProps(0)} />
             <Tab label="Your Transactions" {...a11yProps(1)} />
+            <Tab label="Your Locker Information" {...a11yProps(1)} />
           </Tabs>
         </AppBar>
         <TabPanel value={this.state.tabIndex} index={0}>
@@ -148,6 +164,27 @@ class MemberDashboard extends React.Component {
               <th>{transaction.trans_type == "memp" ? "Membership Payment" : transaction.trans_type == "L" ? "Locker Payment" : ""}</th>
               <th>${transaction.trans_amount}</th>
               <th>{transaction.trans_datetime}</th>
+            </tr>)
+            : 
+            <div></div>}
+            </tbody>
+          </table>
+        </TabPanel>
+        <TabPanel value={this.state.tabIndex} index={2}>
+        <table border="1" style={{ padding: '10px' }}>
+            <thead>
+              <tr>
+                <th>Locker ID</th>
+                <th>Locker Size</th>
+                <th>Locker Room</th>
+              </tr>
+            </thead>
+            <tbody>
+          {this.state.recentTransactionList != null ? this.state.lockerList.map((locker, index) => 
+            <tr>
+              <td>{locker.lock_id}</td>
+              <td>{locker.lock_size == 'l' ? 'Large' : 'Small'}</td>
+              <td>{locker.lock_room == 'm' ? 'Male' : 'Female'}</td>
             </tr>)
             : 
             <div></div>}
