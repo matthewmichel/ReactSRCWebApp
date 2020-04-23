@@ -615,8 +615,35 @@ class ManagerDashboard extends React.Component {
               <Button onClick={() => this.GetLockerInformationById()} variant="outlined">Search</Button>
             </div>
             :
-            <div>
-              <p>{JSON.stringify(this.state.lookupLockerData)}</p>
+            <div style={{ padding: '10px' }}>
+              <div style={{display: 'grid'}}>
+              <table border="1" style={{ padding: '10px', alignContent: 'center' }}>
+                <thead>
+                  <tr>
+                    <th>Locker ID</th>
+                    <th>Transaction ID</th>
+                    <th>Locker Size</th>
+                    <th>Locker Status</th>
+                    <th>Locker Room</th>
+                    <th>Member ID</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.lookupLockerData != null ? 
+                    <tr>
+                      <td>{this.state.lookupLockerData.lock_id}</td>
+                      <td>{this.state.lookupLockerData.trans_id}</td>
+                      <td>{this.state.lookupLockerData.lock_size}</td>
+                      <td>{this.state.lookupLockerData.lock_status == "U" ? "Unavailable" : this.state.lookupLockerData.lock_status == "A" ? "Available" : ""}</td>
+                      <td>{this.state.lookupLockerData.lock_room == "m" ? "Male" : this.state.lookupLockerData.lock_room == "f" ? "Female" : ""}</td>
+                      <td>{this.state.lookupLockerData.mem_id}</td>
+                    </tr>
+                    :
+                    <div></div>}
+                </tbody>
+              </table>
+              </div>
+              
               <Button onClick={() => this.setState({ lookupLockerInformationComplete: false })} variant="outlined">Lookup New Locker</Button>
             </div>
           }
