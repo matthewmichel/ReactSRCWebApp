@@ -30,6 +30,7 @@ class App extends React.Component {
       isLoggedIn: false,
       userInformation: null,
       loading: false,
+      resetPasswordMemId: null,
     };
 
     this.ChangeCurrentScreenState = this.ChangeCurrentScreenState.bind(this);
@@ -38,7 +39,7 @@ class App extends React.Component {
   // FUNCTIONS
   CheckUserCredentials() {
     this.setState({ loading: true });
-    axios.get('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/user/login?ux=' + document.getElementById('usernameInput').value + '&px=' + document.getElementById('passwordInput').value, {})
+    axios.get(encodeURI('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/user/login?ux=' + document.getElementById('usernameInput').value + '&px=' + document.getElementById('passwordInput').value), {})
       .then(res => {
         if (res.data == 490) {
           // WRONG USERNAME/PASSWORD
@@ -51,16 +52,28 @@ class App extends React.Component {
         } else {
           this.setState({ userInformation: res.data });
           console.log(JSON.stringify(res.data));
-          if (res.data.mem_type == 'A') {
-            this.setState({ userType: 'member', currentScreen: 'Dashboard', isLoggedIn: true });
-          } else if (res.data.mem_type == 'M') {
-            this.setState({ userType: 'manager', currentScreen: 'Dashboard', isLoggedIn: true });
+          console.log(res.data.initialPasswordReset)
+          if (res.data.initialPasswordReset == 0) {
+            this.setState({ currentScreen: 'ResetPassword', resetPasswordMemId: res.data.mem_id });
+            this.setState({ loading: false });
+          } else {
+            if (res.data.mem_type == 'A') {
+              this.setState({ userType: 'member', currentScreen: 'Dashboard', isLoggedIn: true });
+            } else if (res.data.mem_type == 'M') {
+              this.setState({ userType: 'manager', currentScreen: 'Dashboard', isLoggedIn: true });
+            }
+            else if (res.data.mem_type == 'E') {
+              this.setState({ userType: 'employee', currentScreen: 'Dashboard', isLoggedIn: true });
+            }
+            else if (res.data.mem_type == 'S') {
+              this.setState({ userType: 'member', currentScreen: 'Dashboard', isLoggedIn: true });
+            }
+            else if (res.data.mem_type == 'F') {
+              this.setState({ userType: 'member', currentScreen: 'Dashboard', isLoggedIn: true });
+            }
+            console.log(this.state.userInformation)
+            this.setState({ loading: false });
           }
-          else if (res.data.mem_type == 'E') {
-            this.setState({ userType: 'employee', currentScreen: 'Dashboard', isLoggedIn: true });
-          }
-          console.log(this.state.userInformation)
-          this.setState({ loading: false });
         }
       })
 
@@ -89,6 +102,19 @@ class App extends React.Component {
   ChangeCurrentScreenState(screenName) {
     this.setState({ currentScreen: screenName });
     console.log(this.state.currentScreen);
+  }
+
+  ResetPassword = () => {
+    this.setState({ loading: true })
+    if(document.getElementById('passwordResetFirstTxt').value == document.getElementById('passwordResetSecondTxt').value) {
+      axios.post(encodeURI('https://jhf78aftzh.execute-api.us-east-2.amazonaws.com/100/user/resetpassword?newpd=' + document.getElementById('passwordResetFirstTxt').value + '&mid=' + this.state.resetPasswordMemId), {})
+      .then(res => {
+        if(res.data = 290) {
+          console.log('successful reset.')
+          this.setState({ currentScreen: 'Login', loading: false })
+        }
+      })
+    }
   }
 
   render() {
@@ -213,7 +239,15 @@ The Department of Intramural and Recreational Sports serves to improve the quali
                         : this.state.userType == 'manager' ? <ManagerDashboard username={this.state.username} isManager={true} userInformation={this.state.userInformation} />
                           : <div></div>}
                   </div>
-                  : <div></div>
+                  : this.state.currentScreen == 'ResetPassword' ?
+                    <div>
+                      <h3>Reset Your Password</h3>
+                      <br /><br /><br />
+                      <TextField id="passwordResetFirstTxt" type="password" variant="outlined" label="New Password" /><br /><br />
+                      <TextField id="passwordResetSecondTxt" type="password" variant="outlined" label="New Password Again" /><br /><br />
+                      <Button variant="outlined" onClick={() => { this.ResetPassword() }}>Reset Password</Button>
+                    </div>
+                    : <div></div>
         }
       </div>
     )

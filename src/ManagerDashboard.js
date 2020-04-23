@@ -644,6 +644,7 @@ class ManagerDashboard extends React.Component {
               </LineChart> */}
               <iframe width="100%" height="700" src="https://app.powerbi.com/reportEmbed?reportId=ded33484-1c31-4fd4-b93b-3f0f0abb68de&autoAuth=true&ctid=dd246e4a-5434-4e15-8ae3-91ad9797b209&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLXVzLW5vcnRoLWNlbnRyYWwtcmVkaXJlY3QuYW5hbHlzaXMud2luZG93cy5uZXQvIn0%3D" frameborder="0" allowFullScreen="true"></iframe>
               <iframe width="100%" height="700" src="https://app.powerbi.com/reportEmbed?reportId=01626ad6-9ae0-48d7-b767-fce5c99c01d9&autoAuth=true&ctid=dd246e4a-5434-4e15-8ae3-91ad9797b209&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLXVzLW5vcnRoLWNlbnRyYWwtcmVkaXJlY3QuYW5hbHlzaXMud2luZG93cy5uZXQvIn0%3D" frameborder="0" allowFullScreen="true"></iframe>
+              <iframe width="100%" height="700" src="https://app.powerbi.com/reportEmbed?reportId=89580bb6-40ea-46a3-bded-a77e9ee483af&autoAuth=true&ctid=dd246e4a-5434-4e15-8ae3-91ad9797b209&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLXVzLW5vcnRoLWNlbnRyYWwtcmVkaXJlY3QuYW5hbHlzaXMud2luZG93cy5uZXQvIn0%3D" frameborder="0" allowFullScreen="true"></iframe>
             </div>
             :
             <div>
